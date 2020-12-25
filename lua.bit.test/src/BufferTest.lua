@@ -246,8 +246,9 @@ function BufferTest:TestReserve_WithNumberAndNumberAndNumber()
 	TestReserve_WithNumberAndNumberAndNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 9, 1, 8, "\069\040\033\230\056\208\019\119\190")
 	TestReserve_WithNumberAndNumberAndNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 17, 1, 8, "\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108\000")
 	TestReserve_WithNumberAndNumberAndNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 8, 5, 8, "\069\040\033\230\056\208\019\119\014")
-	TestReserve_WithNumberAndNumberAndNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 1, 1, 64, "\069\040\033\230\056\208\019\119")
-	--
+	TestReserve_WithNumberAndNumberAndNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 1, 1, 0, "")
+	TestReserve_WithNumberAndNumberAndNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 2, 1, 0, "\069")
+	TestReserve_WithNumberAndNumberAndNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 1, 1, 72, "\069\040\033\230\056\208\019\119\190")
 end
 
 local function TestReserve_WithNumberAndNumberAndNumber_WhereNotValid(index, begin, count)
@@ -264,8 +265,6 @@ function BufferTest:TestReserve_WithNumberAndNumberAndNumber_WhereNotValid()
 	TestReserve_WithNumberAndNumberAndNumber_WhereNotValid(1, 0, 8)
 	TestReserve_WithNumberAndNumberAndNumber_WhereNotValid(1, 9, 8)
 	TestReserve_WithNumberAndNumberAndNumber_WhereNotValid(1, 1.1, 8)
-	TestReserve_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 0)
-	TestReserve_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 65)
 	TestReserve_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 1.1)
 end
 

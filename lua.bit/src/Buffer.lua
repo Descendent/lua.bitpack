@@ -107,9 +107,6 @@ local function Reserve_0(self)
 end
 
 local function Reserve_N(self, index, begin, count)
-	index, count = Buffer.Increment(index, begin, count - 1)
-	begin = 1
-
 	local n = ((index - 1) // 8) + 1
 
 	for i = self._n + 1, n do
@@ -143,8 +140,10 @@ function Buffer:Reserve(index, begin, count)
 	assert(begin >= 1)
 	assert(begin <= 8)
 
-	assert(count >= 1)
-	assert(count <= 64)
+	assert(count >= 0)
+
+	index, count = Buffer.Increment(index, begin, count - 1)
+	begin = 1
 
 	if index == 0 then
 		Reserve_0(self)
