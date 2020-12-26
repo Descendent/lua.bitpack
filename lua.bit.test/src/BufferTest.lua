@@ -87,7 +87,7 @@ end
 
 function BufferTest:TestGet_WithNumber_WhereNotValid()
 	TestGet_WithNumber_WhereNotValid(0)
-	TestGet_WithNumber_WhereNotValid(math.maxinteger)
+	TestGet_WithNumber_WhereNotValid(math.maxinteger) -- Out of range
 	TestGet_WithNumber_WhereNotValid(1.1)
 end
 
@@ -114,7 +114,7 @@ end
 
 function BufferTest:TestGet_WithNumberAndNumberAndNumber_WhereNotValid()
 	TestGet_WithNumberAndNumberAndNumber_WhereNotValid(0, 1, 8)
-	TestGet_WithNumberAndNumberAndNumber_WhereNotValid(math.maxinteger, 1, 8)
+	TestGet_WithNumberAndNumberAndNumber_WhereNotValid(math.maxinteger, 1, 8) -- Out of range
 	TestGet_WithNumberAndNumberAndNumber_WhereNotValid(1.1, 1, 8)
 	TestGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 0, 8)
 	TestGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 9, 8)
@@ -124,7 +124,7 @@ function BufferTest:TestGet_WithNumberAndNumberAndNumber_WhereNotValid()
 	TestGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 1.1)
 end
 
-local function TestSet_WithNumber(index, value, x)
+local function TestSet_WithNumberAndNumber(index, value, x)
 	-- 45 28 21 e6 38 d0 13 77 be 54 66 cf 34 e9 0c 6c
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
@@ -133,13 +133,13 @@ local function TestSet_WithNumber(index, value, x)
 	LuaUnit.assertEquals(tostring(o), x)
 end
 
-function BufferTest:TestSet_WithNumber()
-	TestSet_WithNumber(1, 0xaa, "\170\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
-	TestSet_WithNumber(8, 0xaa, "\069\040\033\230\056\208\019\170\190\084\102\207\052\233\012\108")
-	TestSet_WithNumber(9, 0xaa, "\069\040\033\230\056\208\019\119\170\084\102\207\052\233\012\108")
+function BufferTest:TestSet_WithNumberAndNumber()
+	TestSet_WithNumberAndNumber(1, 0xaa, "\170\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	TestSet_WithNumberAndNumber(8, 0xaa, "\069\040\033\230\056\208\019\170\190\084\102\207\052\233\012\108")
+	TestSet_WithNumberAndNumber(9, 0xaa, "\069\040\033\230\056\208\019\119\170\084\102\207\052\233\012\108")
 end
 
-local function TestSet_WithNumber_WhereNotValid(index, value)
+local function TestSet_WithNumberAndNumber_WhereNotValid(index, value)
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
@@ -147,14 +147,14 @@ local function TestSet_WithNumber_WhereNotValid(index, value)
 	end)
 end
 
-function BufferTest:TestSet_WithNumber_WhereNotValid()
-	TestSet_WithNumber_WhereNotValid(0, 0x0)
-	TestSet_WithNumber_WhereNotValid(math.maxinteger, 0x0)
-	TestSet_WithNumber_WhereNotValid(1.1, 0x0)
-	TestSet_WithNumber_WhereNotValid(1, 0x1ff)
+function BufferTest:TestSet_WithNumberAndNumber_WhereNotValid()
+	TestSet_WithNumberAndNumber_WhereNotValid(0, 0x0)
+	TestSet_WithNumberAndNumber_WhereNotValid(math.maxinteger, 0x0) -- Out of range
+	TestSet_WithNumberAndNumber_WhereNotValid(1.1, 0x0)
+	TestSet_WithNumberAndNumber_WhereNotValid(1, 0x1ff)
 end
 
-local function TestSet_WithNumberAndNumberAndNumber(index, begin, count, value, x)
+local function TestSet_WithNumberAndNumberAndNumberAndNumber(index, begin, count, value, x)
 	-- 45 28 21 e6 38 d0 13 77 be 54 66 cf 34 e9 0c 6c
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
@@ -163,14 +163,14 @@ local function TestSet_WithNumberAndNumberAndNumber(index, begin, count, value, 
 	LuaUnit.assertEquals(tostring(o), x)
 end
 
-function BufferTest:TestSet_WithNumberAndNumberAndNumber()
-	TestSet_WithNumberAndNumberAndNumber(1, 1, 8, 0xaa, "\170\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
-	TestSet_WithNumberAndNumberAndNumber(8, 5, 8, 0xaa, "\069\040\033\230\056\208\019\167\186\084\102\207\052\233\012\108")
-	TestSet_WithNumberAndNumberAndNumber(1, 1, 64, 0xaa, "\170\000\000\000\000\000\000\000\190\084\102\207\052\233\012\108")
-	TestSet_WithNumberAndNumberAndNumber(1, 1, 64, 0xaaaaaaaaaaaaaaaa, "\170\170\170\170\170\170\170\170\190\084\102\207\052\233\012\108")
+function BufferTest:TestSet_WithNumberAndNumberAndNumberAndNumber()
+	TestSet_WithNumberAndNumberAndNumberAndNumber(1, 1, 8, 0xaa, "\170\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	TestSet_WithNumberAndNumberAndNumberAndNumber(8, 5, 8, 0xaa, "\069\040\033\230\056\208\019\167\186\084\102\207\052\233\012\108")
+	TestSet_WithNumberAndNumberAndNumberAndNumber(1, 1, 64, 0xaa, "\170\000\000\000\000\000\000\000\190\084\102\207\052\233\012\108")
+	TestSet_WithNumberAndNumberAndNumberAndNumber(1, 1, 64, 0xaaaaaaaaaaaaaaaa, "\170\170\170\170\170\170\170\170\190\084\102\207\052\233\012\108")
 end
 
-local function TestSet_WithNumberAndNumberAndNumber_WhereNotValid(index, begin, count, value)
+local function TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(index, begin, count, value)
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
@@ -178,17 +178,17 @@ local function TestSet_WithNumberAndNumberAndNumber_WhereNotValid(index, begin, 
 	end)
 end
 
-function BufferTest:TestSet_WithNumberAndNumberAndNumber_WhereNotValid()
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(0, 1, 8, 0x0)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(math.maxinteger, 1, 8, 0x0)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1.1, 1, 8, 0x0)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 0, 8, 0x0)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 9, 8, 0x0)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1.1, 8, 0x0)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 0, 0x0)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 65, 0x0)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 1.1, 0x0)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 8, 0x1ff)
+function BufferTest:TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid()
+	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(0, 1, 8, 0x0)
+	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(math.maxinteger, 1, 8, 0x0) -- Out of range
+	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(1.1, 1, 8, 0x0)
+	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(1, 0, 8, 0x0)
+	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(1, 9, 8, 0x0)
+	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(1, 1.1, 8, 0x0)
+	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(1, 1, 0, 0x0)
+	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(1, 1, 65, 0x0)
+	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(1, 1, 1.1, 0x0)
+	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(1, 1, 8, 0x1ff)
 end
 
 local function TestReserve_WithNumber(a, index, x)
