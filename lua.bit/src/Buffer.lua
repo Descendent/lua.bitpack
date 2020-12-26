@@ -82,6 +82,8 @@ function Buffer:Set(index, begin, count, value)
 	assert(count >= 1)
 	assert(count <= 64)
 
+	assert(value == value & ((1 << count) - 1))
+
 	local i = ((index - 1) // 8) + 1
 
 	local aBegin = (((index - 1) % 8) * 8) + begin

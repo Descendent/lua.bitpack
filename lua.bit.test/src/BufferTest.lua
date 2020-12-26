@@ -137,23 +137,21 @@ function BufferTest:TestSet_WithNumber()
 	TestSet_WithNumber(1, 0xaa, "\170\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 	TestSet_WithNumber(8, 0xaa, "\069\040\033\230\056\208\019\170\190\084\102\207\052\233\012\108")
 	TestSet_WithNumber(9, 0xaa, "\069\040\033\230\056\208\019\119\170\084\102\207\052\233\012\108")
-	TestSet_WithNumber(1, 0xaaaaaaaaaaaaaaaa, "\170\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
-	TestSet_WithNumber(8, 0xaaaaaaaaaaaaaaaa, "\069\040\033\230\056\208\019\170\190\084\102\207\052\233\012\108")
-	TestSet_WithNumber(9, 0xaaaaaaaaaaaaaaaa, "\069\040\033\230\056\208\019\119\170\084\102\207\052\233\012\108")
 end
 
-local function TestSet_WithNumber_WhereNotValid(index)
+local function TestSet_WithNumber_WhereNotValid(index, value)
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
-		o:Set(index)
+		o:Set(index, value)
 	end)
 end
 
 function BufferTest:TestSet_WithNumber_WhereNotValid()
-	TestSet_WithNumber_WhereNotValid(0)
-	TestSet_WithNumber_WhereNotValid(math.maxinteger)
-	TestSet_WithNumber_WhereNotValid(1.1)
+	TestSet_WithNumber_WhereNotValid(0, 0x0)
+	TestSet_WithNumber_WhereNotValid(math.maxinteger, 0x0)
+	TestSet_WithNumber_WhereNotValid(1.1, 0x0)
+	TestSet_WithNumber_WhereNotValid(1, 0x1ff)
 end
 
 local function TestSet_WithNumberAndNumberAndNumber(index, begin, count, value, x)
@@ -169,29 +167,28 @@ function BufferTest:TestSet_WithNumberAndNumberAndNumber()
 	TestSet_WithNumberAndNumberAndNumber(1, 1, 8, 0xaa, "\170\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 	TestSet_WithNumberAndNumberAndNumber(8, 5, 8, 0xaa, "\069\040\033\230\056\208\019\167\186\084\102\207\052\233\012\108")
 	TestSet_WithNumberAndNumberAndNumber(1, 1, 64, 0xaa, "\170\000\000\000\000\000\000\000\190\084\102\207\052\233\012\108")
-	TestSet_WithNumberAndNumberAndNumber(1, 1, 8, 0xaaaaaaaaaaaaaaaa, "\170\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
-	TestSet_WithNumberAndNumberAndNumber(8, 5, 8, 0xaaaaaaaaaaaaaaaa, "\069\040\033\230\056\208\019\167\186\084\102\207\052\233\012\108")
 	TestSet_WithNumberAndNumberAndNumber(1, 1, 64, 0xaaaaaaaaaaaaaaaa, "\170\170\170\170\170\170\170\170\190\084\102\207\052\233\012\108")
 end
 
-local function TestSet_WithNumberAndNumberAndNumber_WhereNotValid(index, begin, count)
+local function TestSet_WithNumberAndNumberAndNumber_WhereNotValid(index, begin, count, value)
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
-		o:Set(index, begin, count)
+		o:Set(index, begin, count, value)
 	end)
 end
 
 function BufferTest:TestSet_WithNumberAndNumberAndNumber_WhereNotValid()
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(0, 1, 8)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(math.maxinteger, 1, 8)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1.1, 1, 8)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 0, 8)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 9, 8)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1.1, 8)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 0)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 65)
-	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 1.1)
+	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(0, 1, 8, 0x0)
+	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(math.maxinteger, 1, 8, 0x0)
+	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1.1, 1, 8, 0x0)
+	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 0, 8, 0x0)
+	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 9, 8, 0x0)
+	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1.1, 8, 0x0)
+	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 0, 0x0)
+	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 65, 0x0)
+	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 1.1, 0x0)
+	TestSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 8, 0x1ff)
 end
 
 local function TestReserve_WithNumber(a, index, x)
