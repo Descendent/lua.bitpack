@@ -64,6 +64,122 @@ function BufferTest:TestIncrement()
 	TestIncrement(1, 1, 16, 3, 1)
 end
 
+local function TestCanGet_WithNumber(a, index, x)
+	local o = Buffer.New(a)
+
+	LuaUnit.assertEquals(o:CanGet(index), x)
+end
+
+function BufferTest:TestCanGet_WithNumber()
+	TestCanGet_WithNumber(nil, 1, false)
+	TestCanGet_WithNumber("\000\000\000\000\000\000\000\000", 8, true)
+	TestCanGet_WithNumber("\000\000\000\000\000\000\000\000", 9, false)
+end
+
+local function TestCanGet_WithNumber_WhereNotValid(index)
+	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+
+	LuaUnit.assertError(function ()
+		o:CanGet(index)
+	end)
+end
+
+function BufferTest:TestCanGet_WithNumber_WhereNotValid()
+	TestCanGet_WithNumber_WhereNotValid(0)
+	TestCanGet_WithNumber_WhereNotValid(1.1)
+end
+
+local function TestCanGet_WithNumberAndNumberAndNumber(a, index, begin, count, x)
+	local o = Buffer.New(a)
+
+	LuaUnit.assertEquals(o:CanGet(index, begin, count), x)
+end
+
+function BufferTest:TestCanGet_WithNumberAndNumberAndNumber()
+	TestCanGet_WithNumberAndNumberAndNumber(nil, 1, 1, 8, false)
+	TestCanGet_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000", 8, 1, 8, true)
+	TestCanGet_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000", 9, 1, 8, false)
+	TestCanGet_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000", 8, 5, 8, false)
+	TestCanGet_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000", 1, 1, 64, true)
+end
+
+local function TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid(index, begin, count)
+	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+
+	LuaUnit.assertError(function ()
+		o:CanGet(index, begin, count)
+	end)
+end
+
+function BufferTest:TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid()
+	TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid(0, 1, 8)
+	TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid(1.1, 1, 8)
+	TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 0, 8)
+	TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 9, 8)
+	TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1.1, 8)
+	TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 0)
+	TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 65)
+	TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 1.1)
+end
+
+local function TestCanSet_WithNumber(a, index, x)
+	local o = Buffer.New(a)
+
+	LuaUnit.assertEquals(o:CanSet(index), x)
+end
+
+function BufferTest:TestCanSet_WithNumber()
+	TestCanSet_WithNumber(nil, 1, false)
+	TestCanSet_WithNumber("\000\000\000\000\000\000\000\000", 8, true)
+	TestCanSet_WithNumber("\000\000\000\000\000\000\000\000", 9, false)
+end
+
+local function TestCanSet_WithNumber_WhereNotValid(index)
+	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+
+	LuaUnit.assertError(function ()
+		o:CanSet(index)
+	end)
+end
+
+function BufferTest:TestCanSet_WithNumber_WhereNotValid()
+	TestCanSet_WithNumber_WhereNotValid(0)
+	TestCanSet_WithNumber_WhereNotValid(1.1)
+end
+
+local function TestCanSet_WithNumberAndNumberAndNumber(a, index, begin, count, x)
+	local o = Buffer.New(a)
+
+	LuaUnit.assertEquals(o:CanSet(index, begin, count), x)
+end
+
+function BufferTest:TestCanSet_WithNumberAndNumberAndNumber()
+	TestCanSet_WithNumberAndNumberAndNumber(nil, 1, 1, 8, false)
+	TestCanSet_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000", 8, 1, 8, true)
+	TestCanSet_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000", 9, 1, 8, false)
+	TestCanSet_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000", 8, 5, 8, false)
+	TestCanSet_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000", 1, 1, 64, true)
+end
+
+local function TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid(index, begin, count)
+	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+
+	LuaUnit.assertError(function ()
+		o:CanSet(index, begin, count)
+	end)
+end
+
+function BufferTest:TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid()
+	TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid(0, 1, 8)
+	TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid(1.1, 1, 8)
+	TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 0, 8)
+	TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 9, 8)
+	TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1.1, 8)
+	TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 0)
+	TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 65)
+	TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 1.1)
+end
+
 local function TestGet_WithNumber(index, x)
 	-- 45 28 21 e6 38 d0 13 77 be 54 66 cf 34 e9 0c 6c
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")

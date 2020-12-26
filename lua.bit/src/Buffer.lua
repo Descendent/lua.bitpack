@@ -33,6 +33,34 @@ function Buffer.Increment(index, begin, count)
 	return Buffer.Normalize(index, begin + count)
 end
 
+local function CanHas(self, index, begin, count)
+	if (begin == nil) and (count == nil) then
+		begin = 1
+		count = 8
+	end
+
+	assert(index >= 1)
+	assert(index == index << 0)
+
+	assert(begin >= 1)
+	assert(begin <= 8)
+	assert(begin == begin << 0)
+
+	assert(count >= 1)
+	assert(count <= 64)
+	assert(count == count << 0)
+
+	return (Buffer.Increment(index, begin, count - 1) <= self._len)
+end
+
+function Buffer:CanGet(index, begin, count)
+	return CanHas(self, index, begin, count)
+end
+
+function Buffer:CanSet(index, begin, count)
+	return CanHas(self, index, begin, count)
+end
+
 function Buffer:Get(index, begin, count)
 	if (begin == nil) and (count == nil) then
 		begin = 1
