@@ -1,6 +1,94 @@
 local Buffer = {}
 Buffer.__index = Buffer
 
+--------------------------------------------------------------------------------
+
+local Reader = {}
+Reader.__index = Reader
+
+function Reader.New(buf, index, begin)
+	if index == nil then
+		index = 1
+	end
+
+	if begin == nil then
+		begin = 1
+	end
+
+	local self = setmetatable({}, Reader)
+
+	self._buf = buf
+	self._index = index
+	self._begin = begin
+
+	return self
+end
+
+function Reader:GetIndex()
+	return self._index
+end
+
+function Reader:GetBegin()
+	return self._begin
+end
+
+function Reader:CanGet(count)
+	return self._buf:CanGet(self._index, self._begin, count)
+end
+
+function Reader:Get(count)
+	local value = self._buf:Get(self._index, self._begin, count)
+	self._index, self._begin = Buffer.Increment(self._index, self._begin, count)
+
+	return value
+end
+
+--------------------------------------------------------------------------------
+
+local Writer = {}
+Writer.__index = Writer
+
+function Writer.New(buf, index, begin)
+	if index == nil then
+		index = 1
+	end
+
+	if begin == nil then
+		begin = 1
+	end
+
+	local self = setmetatable({}, Writer)
+
+	self._buf = buf
+	self._index = index
+	self._begin = begin
+
+	return self
+end
+
+function Writer:GetIndex()
+	return self._index
+end
+
+function Writer:GetBegin()
+	return self._begin
+end
+
+function Writer:CanSet(count)
+	return self._buf:CanSet(self._index, self._begin, count)
+end
+
+function Writer:Set(count, value, reserve)
+	if reserve then
+		self._buf:Reserve(self._index, self._begin, count)
+	end
+
+	self._buf:Set(self._index, self._begin, count, value)
+	self._index, self._begin = Buffer.Increment(self._index, self._begin, count)
+end
+
+--------------------------------------------------------------------------------
+
 local function GetFormatter(self)
 	-- Format-string for `string.pack` and `string.unpack`
 	-- https://www.lua.org/manual/5.3/manual.html#6.4.2
@@ -198,6 +286,14 @@ function Buffer:__tostring()
 	Refresh(self)
 
 	return string.pack(table.unpack(self._bin, 0, self._n))
+end
+
+function Buffer:GetReader(index, begin)
+	return Reader.New(self, index, begin)
+end
+
+function Buffer:GetWriter(index, begin)
+	return Writer.New(self, index, begin)
 end
 
 return Buffer
