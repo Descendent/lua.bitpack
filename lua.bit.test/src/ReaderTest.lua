@@ -76,4 +76,32 @@ function ReaderTest:TestGet_WithNumber_WhereNotCanGet()
 	TestGet_WithNumber_WhereNotCanGet("\000\000\000\000\000\000\000\000", 7, 2, 8)
 end
 
+local function TestGetSignify_WithNumber(a, index, begin, count, x)
+	local buf = Buffer.New(a)
+	local o = buf:GetReader(index, begin)
+
+	LuaUnit.assertEquals(o:GetSignify(count), x)
+end
+
+function ReaderTest:TestGetSignify_WithNumber()
+	TestGetSignify_WithNumber("\127", 1, 1, 8, 127)
+	TestGetSignify_WithNumber("\255", 1, 1, 8, -127)
+	TestGetSignify_WithNumber("\000", 1, 1, 8, 0)
+	TestGetSignify_WithNumber("\128", 1, 1, 8, 0)
+	TestGetSignify_WithNumber("\240\007", 1, 5, 8, 127)
+	TestGetSignify_WithNumber("\240\015", 1, 5, 8, -127)
+end
+
+local function TestGetNillify_WithNumber(a, index, begin, count, x)
+	local buf = Buffer.New(a)
+	local o = buf:GetReader(index, begin)
+
+	LuaUnit.assertEquals(o:GetNillify(count), x)
+end
+
+function ReaderTest:TestGetNillify_WithNumber()
+	TestGetNillify_WithNumber("\000", 1, 1, 8, nil)
+	TestGetNillify_WithNumber("\255", 1, 1, 8, 255)
+end
+
 return ReaderTest

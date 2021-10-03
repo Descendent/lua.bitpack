@@ -43,6 +43,20 @@ function Reader:Get(count)
 	return value
 end
 
+function Reader:GetSignify(count)
+	return self:Get(count - 1) * ((-2 * self:Get(1)) + 1)
+end
+
+function Reader:GetNillify(count)
+	local value = self:Get(count)
+
+	if value == 0 then
+		value = nil
+	end
+
+	return value
+end
+
 --------------------------------------------------------------------------------
 
 local Writer = {}
@@ -85,6 +99,27 @@ function Writer:Set(count, value, reserve)
 
 	self._buf:Set(self._index, self._begin, count, value)
 	self._index, self._begin = Buffer.Increment(self._index, self._begin, count)
+end
+
+function Writer:SetSignify(count, value, reserve)
+	local a
+
+	if value < 0 then
+		a = 1
+	else
+		a = 0
+	end
+
+	self:Set(count - 1, math.abs(value), reserve)
+	self:Set(1, a, reserve)
+end
+
+function Writer:SetNillify(count, value, reserve)
+	if value == nil then
+		value = 0
+	end
+
+	self:Set(count, value, reserve)
 end
 
 --------------------------------------------------------------------------------

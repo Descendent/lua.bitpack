@@ -96,4 +96,54 @@ function WriterTest:TestSet_WithNumberAndNumberAndBoolean()
 	TestSet_WithNumberAndNumberAndBoolean(1, 1, 64, 0xaaaaaaaaaaaaaaaa, "\170\170\170\170\170\170\170\170\170\170\170\170\170\170\170\170")
 end
 
+local function TestSetSignify_WithNumberAndNumber(index, begin, count, value, x)
+	local buf = Buffer.New()
+	local o = buf:GetWriter(index, begin)
+
+	o:SetSignify(count, value, true)
+
+	LuaUnit.assertEquals(tostring(buf), x)
+end
+
+function WriterTest:TestSetSignify_WithNumberAndNumber()
+	TestSetSignify_WithNumberAndNumber(1, 1, 8, 127, "\127")
+	TestSetSignify_WithNumberAndNumber(1, 1, 8, -127, "\255")
+	TestSetSignify_WithNumberAndNumber(1, 1, 8, 0, "\000")
+	TestSetSignify_WithNumberAndNumber(1, 1, 8, -0, "\000")
+	TestSetSignify_WithNumberAndNumber(1, 5, 8, 127, "\240\007")
+	TestSetSignify_WithNumberAndNumber(1, 5, 8, -127, "\240\015")
+end
+
+local function TestSetSignify_WithNumberAndNumber_WhereNotCanSet(index, begin, count, value, x)
+	local buf = Buffer.New()
+	local o = buf:GetWriter(index, begin)
+
+	LuaUnit.assertError(function ()
+		o:SetSignify(count, value, true)
+	end)
+end
+
+function WriterTest:TestSetSignify_WithNumberAndNumber_WhereNotCanSet()
+	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 1, 7, 127, "\127")
+	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 1, 7, -127, "\255")
+	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 1, 1, 0, "\000")
+	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 1, 1, -0, "\000")
+	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 5, 7, 127, "\240\007")
+	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 5, 7, -127, "\240\015")
+end
+
+local function TestSetNillify_WithNumberAndNumber(index, begin, count, value, x)
+	local buf = Buffer.New()
+	local o = buf:GetWriter(index, begin)
+
+	o:SetNillify(count, value, true)
+
+	LuaUnit.assertEquals(tostring(buf), x)
+end
+
+function WriterTest:TestSetNillify_WithNumberAndNumber()
+	TestSetNillify_WithNumberAndNumber(1, 1, 8, nil, "\000")
+	TestSetNillify_WithNumberAndNumber(1, 1, 8, 255, "\255")
+end
+
 return WriterTest
