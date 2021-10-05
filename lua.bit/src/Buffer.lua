@@ -51,7 +51,7 @@ function Reader:GetNillify(count)
 	local value = self:Get(count)
 
 	if value == 0 then
-		value = nil
+		return nil
 	end
 
 	return value
