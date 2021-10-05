@@ -57,6 +57,10 @@ function Reader:GetNillify(count)
 	return value
 end
 
+function Reader:GetBoolean(count)
+	return (self:Get(count) ~= 0)
+end
+
 --------------------------------------------------------------------------------
 
 local Writer = {}
@@ -108,6 +112,18 @@ end
 function Writer:SetNillify(count, value, reserve)
 	if value == nil then
 		value = 0
+	end
+
+	self:Set(count, value, reserve)
+end
+
+function Writer:SetBoolean(count, value, reserve)
+	if value == 0 then
+		--
+	elseif not value then
+		value = 0
+	else
+		value = 1
 	end
 
 	self:Set(count, value, reserve)

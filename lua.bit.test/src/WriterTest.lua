@@ -154,4 +154,24 @@ function WriterTest:TestSetNillify_WithNumberAndNumber()
 	TestSetNillify_WithNumberAndNumber(1, 1, 8, 255, "\255")
 end
 
+local function TestSetBoolean_WithNumberAndNumber(index, begin, count, value, x)
+	local buf = Buffer.New()
+	local o = buf:GetWriter(index, begin)
+
+	o:SetBoolean(count, value, true)
+
+	LuaUnit.assertEquals(tostring(buf), x)
+end
+
+function WriterTest:TestSetBoolean_WithNumberAndNumber()
+	TestSetBoolean_WithNumberAndNumber(1, 1, 1, false, "\000")
+	TestSetBoolean_WithNumberAndNumber(1, 1, 1, true, "\001")
+	TestSetBoolean_WithNumberAndNumber(1, 1, 1, nil, "\000")
+	TestSetBoolean_WithNumberAndNumber(1, 1, 1, 0, "\000")
+	TestSetBoolean_WithNumberAndNumber(1, 1, 1, -1, "\001")
+	TestSetBoolean_WithNumberAndNumber(1, 1, 1, "", "\001")
+	TestSetBoolean_WithNumberAndNumber(1, 1, 8, false, "\000")
+	TestSetBoolean_WithNumberAndNumber(1, 1, 8, true, "\001")
+end
+
 return WriterTest

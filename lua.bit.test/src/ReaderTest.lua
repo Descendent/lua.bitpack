@@ -112,4 +112,18 @@ function ReaderTest:TestGetNillify_WithNumber()
 	TestGetNillify_WithNumber("\255", 1, 1, 8, 255)
 end
 
+local function TestGetBoolean_WithNumber(a, index, begin, count, x)
+	local buf = Buffer.New(a)
+	local o = buf:GetReader(index, begin)
+
+	LuaUnit.assertEquals(o:GetBoolean(count), x)
+end
+
+function ReaderTest:TestGetBoolean_WithNumber()
+	TestGetBoolean_WithNumber("\000", 1, 1, 1, false)
+	TestGetBoolean_WithNumber("\001", 1, 1, 1, true)
+	TestGetBoolean_WithNumber("\000", 1, 1, 8, false)
+	TestGetBoolean_WithNumber("\255", 1, 1, 8, true)
+end
+
 return ReaderTest
