@@ -106,15 +106,23 @@ local function TestSetSignify_WithNumberAndNumber(index, begin, count, value, x)
 end
 
 function WriterTest:TestSetSignify_WithNumberAndNumber()
-	TestSetSignify_WithNumberAndNumber(1, 1, 8, 127, "\127")
-	TestSetSignify_WithNumberAndNumber(1, 1, 8, -127, "\255")
-	TestSetSignify_WithNumberAndNumber(1, 1, 8, 0, "\000")
-	TestSetSignify_WithNumberAndNumber(1, 1, 8, -0, "\000")
-	TestSetSignify_WithNumberAndNumber(1, 5, 8, 127, "\240\007")
-	TestSetSignify_WithNumberAndNumber(1, 5, 8, -127, "\240\015")
+	TestSetSignify_WithNumberAndNumber(1, 1, 8, 127, "\255")
+	TestSetSignify_WithNumberAndNumber(1, 1, 8, -128, "\000")
+	TestSetSignify_WithNumberAndNumber(1, 1, 8, 0, "\128")
+	TestSetSignify_WithNumberAndNumber(1, 1, 1, 0, "\001")
+	TestSetSignify_WithNumberAndNumber(1, 1, 2, 1, "\003")
+	TestSetSignify_WithNumberAndNumber(1, 1, 1, -1, "\000")
+	TestSetSignify_WithNumberAndNumber(1, 1, 64, (1 << 63) - 1, "\255\255\255\255\255\255\255\255")
+	TestSetSignify_WithNumberAndNumber(1, 1, 64, -(1 << 63), "\000\000\000\000\000\000\000\000")
+	TestSetSignify_WithNumberAndNumber(1, 5, 8, 127, "\240\015")
+	TestSetSignify_WithNumberAndNumber(1, 5, 8, -128, "\000\000")
+	TestSetSignify_WithNumberAndNumber(1, 5, 8, 0, "\000\008")
+	TestSetSignify_WithNumberAndNumber(1, 8, 1, 0, "\128")
+	TestSetSignify_WithNumberAndNumber(1, 8, 2, 1, "\128\001")
+	TestSetSignify_WithNumberAndNumber(1, 8, 1, -1, "\000")
 end
 
-local function TestSetSignify_WithNumberAndNumber_WhereNotCanSet(index, begin, count, value, x)
+local function TestSetSignify_WithNumberAndNumber_WhereNotCanSet(index, begin, count, value)
 	local buf = Buffer.New()
 	local o = buf:GetWriter(index, begin)
 
@@ -124,12 +132,12 @@ local function TestSetSignify_WithNumberAndNumber_WhereNotCanSet(index, begin, c
 end
 
 function WriterTest:TestSetSignify_WithNumberAndNumber_WhereNotCanSet()
-	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 1, 7, 127, "\127")
-	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 1, 7, -127, "\255")
-	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 1, 1, 0, "\000")
-	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 1, 1, -0, "\000")
-	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 5, 7, 127, "\240\007")
-	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 5, 7, -127, "\240\015")
+	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 1, 7, 127)
+	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 1, 7, -128)
+	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 1, 1, 1)
+	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 5, 7, 127)
+	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 5, 7, -128)
+	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 5, 1, 1)
 end
 
 local function TestSetNillify_WithNumberAndNumber(index, begin, count, value, x)

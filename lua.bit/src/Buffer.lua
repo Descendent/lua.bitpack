@@ -44,7 +44,7 @@ function Reader:Get(count)
 end
 
 function Reader:GetSignify(count)
-	return self:Get(count - 1) * ((-2 * self:Get(1)) + 1)
+	return self:Get(count) - (1 << (count - 1))
 end
 
 function Reader:GetNillify(count)
@@ -102,16 +102,7 @@ function Writer:Set(count, value, reserve)
 end
 
 function Writer:SetSignify(count, value, reserve)
-	local a
-
-	if value < 0 then
-		a = 1
-	else
-		a = 0
-	end
-
-	self:Set(count - 1, math.abs(value), reserve)
-	self:Set(1, a, reserve)
+	self:Set(count, value + (1 << (count - 1)), reserve)
 end
 
 function Writer:SetNillify(count, value, reserve)
