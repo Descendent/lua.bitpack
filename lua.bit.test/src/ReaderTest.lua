@@ -4,8 +4,40 @@ local Buffer = require("Buffer")
 
 local ReaderTest = {}
 
-local function TestNew_WithBuffer()
+local function New(str)
 	local buf = Buffer.New()
+
+	if str == nil then
+		return buf
+	end
+
+	buf:Reserve(#str)
+
+	local index = 1
+	local begin = 1
+	for i = 1, #str do
+		buf:Set(index, begin, 8, string.byte(str, i))
+		index, begin = Buffer.Increment(index, begin, 8)
+	end
+
+	return buf
+end
+
+local function ToString(buf)
+	local str = {}
+
+	local index = 1
+	local begin = 1
+	for i = 1, #buf do
+		str[i] = string.char(buf:Get(index, begin, 8))
+		index, begin = Buffer.Increment(index, begin, 8)
+	end
+
+	return table.concat(str)
+end
+
+local function TestNew_WithBuffer()
+	local buf = New()
 	local o = buf:GetReader()
 
 	LuaUnit.assertEquals(o:GetIndex(), 1)
@@ -17,7 +49,7 @@ function ReaderTest:TestNew_WithBuffer()
 end
 
 local function TestNew_WithBufferAndNumber(index)
-	local buf = Buffer.New()
+	local buf = New()
 	local o = buf:GetReader(index)
 
 	LuaUnit.assertEquals(o:GetIndex(), index)
@@ -30,7 +62,7 @@ function ReaderTest:TestNew_WithBufferAndNumber()
 end
 
 local function TestNew_WithBufferAndNumberAndNumber(index, begin)
-	local buf = Buffer.New()
+	local buf = New()
 	local o = buf:GetReader(index, begin)
 
 	LuaUnit.assertEquals(o:GetIndex(), index)
@@ -45,7 +77,7 @@ end
 
 local function TestGet_WithNumber(index, begin, count, x)
 	-- 45 28 21 e6 38 d0 13 77 be 54 66 cf 34 e9 0c 6c
-	local buf = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	local buf = New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 	local o = buf:GetReader(index, begin)
 
 	LuaUnit.assertEquals(o:Get(count), x[1])
@@ -59,7 +91,7 @@ function ReaderTest:TestGet_WithNumber()
 end
 
 local function TestGet_WithNumber_WhereNotCanGet(a, index, begin, count)
-	local buf = Buffer.New(a)
+	local buf = New(a)
 	local o = buf:GetReader(index, begin)
 
 	LuaUnit.assertError(function ()
@@ -77,7 +109,7 @@ function ReaderTest:TestGet_WithNumber_WhereNotCanGet()
 end
 
 local function TestGetSignify_WithNumber(a, index, begin, count, x)
-	local buf = Buffer.New(a)
+	local buf = New(a)
 	local o = buf:GetReader(index, begin)
 
 	LuaUnit.assertEquals(o:GetSignify(count), x)
@@ -101,7 +133,7 @@ function ReaderTest:TestGetSignify_WithNumber()
 end
 
 local function TestGetNillify_WithNumber(a, index, begin, count, x)
-	local buf = Buffer.New(a)
+	local buf = New(a)
 	local o = buf:GetReader(index, begin)
 
 	LuaUnit.assertEquals(o:GetNillify(count), x)
@@ -113,7 +145,7 @@ function ReaderTest:TestGetNillify_WithNumber()
 end
 
 local function TestGetBoolean_WithNumber(a, index, begin, count, x)
-	local buf = Buffer.New(a)
+	local buf = New(a)
 	local o = buf:GetReader(index, begin)
 
 	LuaUnit.assertEquals(o:GetBoolean(count), x)

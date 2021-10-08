@@ -4,8 +4,40 @@ local Buffer = require("Buffer")
 
 local WriterTest = {}
 
-local function TestNew_WithBuffer()
+local function New(str)
 	local buf = Buffer.New()
+
+	if str == nil then
+		return buf
+	end
+
+	buf:Reserve(#str)
+
+	local index = 1
+	local begin = 1
+	for i = 1, #str do
+		buf:Set(index, begin, 8, string.byte(str, i))
+		index, begin = Buffer.Increment(index, begin, 8)
+	end
+
+	return buf
+end
+
+local function ToString(buf)
+	local str = {}
+
+	local index = 1
+	local begin = 1
+	for i = 1, #buf do
+		str[i] = string.char(buf:Get(index, begin, 8))
+		index, begin = Buffer.Increment(index, begin, 8)
+	end
+
+	return table.concat(str)
+end
+
+local function TestNew_WithBuffer()
+	local buf = New()
 	local o = buf:GetWriter()
 
 	LuaUnit.assertEquals(o:GetIndex(), 1)
@@ -17,7 +49,7 @@ function WriterTest:TestNew_WithBuffer()
 end
 
 local function TestNew_WithBufferAndNumber(index)
-	local buf = Buffer.New()
+	local buf = New()
 	local o = buf:GetWriter(index)
 
 	LuaUnit.assertEquals(o:GetIndex(), index)
@@ -30,7 +62,7 @@ function WriterTest:TestNew_WithBufferAndNumber()
 end
 
 local function TestNew_WithBufferAndNumberAndNumber(index, begin)
-	local buf = Buffer.New()
+	local buf = New()
 	local o = buf:GetWriter(index, begin)
 
 	LuaUnit.assertEquals(o:GetIndex(), index)
@@ -45,13 +77,13 @@ end
 
 local function TestSet_WithNumberAndNumber(index, begin, count, value, x)
 	-- 45 28 21 e6 38 d0 13 77 be 54 66 cf 34 e9 0c 6c
-	local buf = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	local buf = New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 	local o = buf:GetWriter(index, begin)
 
 	o:Set(count, value)
 	o:Set(count, value)
 
-	LuaUnit.assertEquals(tostring(buf), x)
+	LuaUnit.assertEquals(ToString(buf), x)
 end
 
 function WriterTest:TestSet_WithNumberAndNumber()
@@ -62,7 +94,7 @@ function WriterTest:TestSet_WithNumberAndNumber()
 end
 
 local function TestSet_WithNumberAndNumber_WhereNotCanSet(a, index, begin, count, value)
-	local buf = Buffer.New(a)
+	local buf = New(a)
 	local o = buf:GetWriter(index, begin)
 
 	LuaUnit.assertError(function ()
@@ -80,13 +112,13 @@ function WriterTest:TestSet_WithNumberAndNumber_WhereNotCanSet()
 end
 
 local function TestSet_WithNumberAndNumberAndBoolean(index, begin, count, value, x)
-	local buf = Buffer.New()
+	local buf = New()
 	local o = buf:GetWriter(index, begin)
 
 	o:Set(count, value, true)
 	o:Set(count, value, true)
 
-	LuaUnit.assertEquals(tostring(buf), x)
+	LuaUnit.assertEquals(ToString(buf), x)
 end
 
 function WriterTest:TestSet_WithNumberAndNumberAndBoolean()
@@ -97,12 +129,12 @@ function WriterTest:TestSet_WithNumberAndNumberAndBoolean()
 end
 
 local function TestSetSignify_WithNumberAndNumber(index, begin, count, value, x)
-	local buf = Buffer.New()
+	local buf = New()
 	local o = buf:GetWriter(index, begin)
 
 	o:SetSignify(count, value, true)
 
-	LuaUnit.assertEquals(tostring(buf), x)
+	LuaUnit.assertEquals(ToString(buf), x)
 end
 
 function WriterTest:TestSetSignify_WithNumberAndNumber()
@@ -123,7 +155,7 @@ function WriterTest:TestSetSignify_WithNumberAndNumber()
 end
 
 local function TestSetSignify_WithNumberAndNumber_WhereNotCanSet(index, begin, count, value)
-	local buf = Buffer.New()
+	local buf = New()
 	local o = buf:GetWriter(index, begin)
 
 	LuaUnit.assertError(function ()
@@ -141,12 +173,12 @@ function WriterTest:TestSetSignify_WithNumberAndNumber_WhereNotCanSet()
 end
 
 local function TestSetNillify_WithNumberAndNumber(index, begin, count, value, x)
-	local buf = Buffer.New()
+	local buf = New()
 	local o = buf:GetWriter(index, begin)
 
 	o:SetNillify(count, value, true)
 
-	LuaUnit.assertEquals(tostring(buf), x)
+	LuaUnit.assertEquals(ToString(buf), x)
 end
 
 function WriterTest:TestSetNillify_WithNumberAndNumber()
@@ -155,12 +187,12 @@ function WriterTest:TestSetNillify_WithNumberAndNumber()
 end
 
 local function TestSetBoolean_WithNumberAndNumber(index, begin, count, value, x)
-	local buf = Buffer.New()
+	local buf = New()
 	local o = buf:GetWriter(index, begin)
 
 	o:SetBoolean(count, value, true)
 
-	LuaUnit.assertEquals(tostring(buf), x)
+	LuaUnit.assertEquals(ToString(buf), x)
 end
 
 function WriterTest:TestSetBoolean_WithNumberAndNumber()
