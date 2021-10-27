@@ -147,6 +147,8 @@ end
 
 --------------------------------------------------------------------------------
 
+Buffer.DEBUG = true
+
 -- https://rfc.zeromq.org/spec/32/
 -- https://en.wikipedia.org/wiki/Ascii85#Adobe_version
 
@@ -218,7 +220,9 @@ local function Decode(str)
 		return {}, 0
 	end
 
-	assert(#str % 5 ~= 1)
+	if Buffer.DEBUG then
+		assert(#str % 5 ~= 1)
+	end
 
 	local STRING_UNPACK = string.unpack
 
@@ -342,16 +346,18 @@ local function CanHas(self, index, begin, count)
 		count = 8
 	end
 
-	assert(index >= 1)
-	assert(index == index << 0)
+	if Buffer.DEBUG then
+		assert(index >= 1)
+		assert(index == index << 0)
 
-	assert(begin >= 1)
-	assert(begin <= 8)
-	assert(begin == begin << 0)
+		assert(begin >= 1)
+		assert(begin <= 8)
+		assert(begin == begin << 0)
 
-	assert(count >= 1)
-	assert(count <= 64)
-	assert(count == count << 0)
+		assert(count >= 1)
+		assert(count <= 64)
+		assert(count == count << 0)
+	end
 
 	return (Buffer.Increment(index, begin, count - 1) <= self._len)
 end
@@ -370,13 +376,15 @@ function Buffer:Get(index, begin, count)
 		count = 8
 	end
 
-	assert(index >= 1)
+	if Buffer.DEBUG then
+		assert(index >= 1)
 
-	assert(begin >= 1)
-	assert(begin <= 8)
+		assert(begin >= 1)
+		assert(begin <= 8)
 
-	assert(count >= 1)
-	assert(count <= 64)
+		assert(count >= 1)
+		assert(count <= 64)
+	end
 
 	local i = ((index - 1) // 8) + 1
 
@@ -405,15 +413,17 @@ function Buffer:Set(index, begin, count, value)
 		count = 8
 	end
 
-	assert(index >= 1)
+	if Buffer.DEBUG then
+		assert(index >= 1)
 
-	assert(begin >= 1)
-	assert(begin <= 8)
+		assert(begin >= 1)
+		assert(begin <= 8)
 
-	assert(count >= 1)
-	assert(count <= 64)
+		assert(count >= 1)
+		assert(count <= 64)
 
-	assert(value == value & ((1 << count) - 1))
+		assert(value == value & ((1 << count) - 1))
+	end
 
 	local i = ((index - 1) // 8) + 1
 
@@ -467,12 +477,14 @@ function Buffer:Reserve(index, begin, count)
 		count = 8
 	end
 
-	assert(index >= 0)
+	if Buffer.DEBUG then
+		assert(index >= 0)
 
-	assert(begin >= 1)
-	assert(begin <= 8)
+		assert(begin >= 1)
+		assert(begin <= 8)
 
-	assert(count >= 0)
+		assert(count >= 0)
+	end
 
 	index, count = Buffer.Increment(index, begin, count - 1)
 	begin = 1
