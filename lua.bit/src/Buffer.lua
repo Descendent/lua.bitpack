@@ -28,8 +28,16 @@ function Reader:GetIndex()
 	return self._index
 end
 
+function Reader:SetIndex(value)
+	self._index = value
+end
+
 function Reader:GetBegin()
 	return self._begin
+end
+
+function Reader:SetBegin(value)
+	self._begin = value
 end
 
 function Reader:CanGet(count)
@@ -88,8 +96,16 @@ function Writer:GetIndex()
 	return self._index
 end
 
+function Writer:SetIndex(value)
+	self._index = value
+end
+
 function Writer:GetBegin()
 	return self._begin
+end
+
+function Writer:SetBegin(value)
+	self._begin = value
 end
 
 function Writer:CanSet(count)
