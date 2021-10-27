@@ -116,9 +116,14 @@ local function TestIncrement(index, begin, count, x, y)
 end
 
 function BufferTest:TestIncrement()
+	TestIncrement(1, 1, 0, 1, 1)
 	TestIncrement(1, 1, 1, 1, 2)
 	TestIncrement(1, 1, 8, 2, 1)
 	TestIncrement(1, 1, 16, 3, 1)
+	TestIncrement(1, 1, -1, 0, 8)
+	TestIncrement(1, 2, -1, 1, 1)
+	TestIncrement(2, 1, -8, 1, 1)
+	TestIncrement(3, 1, -16, 1, 1)
 end
 
 local function TestCanGet_WithNumber(a, index, x)
