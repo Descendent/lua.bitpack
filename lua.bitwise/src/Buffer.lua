@@ -355,7 +355,6 @@ local function CanHas(self, index, begin, count)
 		assert(begin == begin << 0)
 
 		assert(count >= 1)
-		assert(count <= 64)
 		assert(count == count << 0)
 	end
 

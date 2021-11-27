@@ -163,6 +163,7 @@ function BufferTest:TestCanGet_WithNumberAndNumberAndNumber()
 	TestCanGet_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000", 9, 1, 8, false)
 	TestCanGet_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000", 8, 5, 8, false)
 	TestCanGet_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000", 1, 1, 64, true)
+	TestCanGet_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000\000", 1, 1, 65, true)
 end
 
 local function TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid(index, begin, count)
@@ -180,7 +181,6 @@ function BufferTest:TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid()
 	TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 9, 8)
 	TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1.1, 8)
 	TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 0)
-	TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 65)
 	TestCanGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 1.1)
 end
 
@@ -221,6 +221,7 @@ function BufferTest:TestCanSet_WithNumberAndNumberAndNumber()
 	TestCanSet_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000", 9, 1, 8, false)
 	TestCanSet_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000", 8, 5, 8, false)
 	TestCanSet_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000", 1, 1, 64, true)
+	TestCanSet_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000\000", 1, 1, 65, true)
 end
 
 local function TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid(index, begin, count)
@@ -238,7 +239,6 @@ function BufferTest:TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid()
 	TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 9, 8)
 	TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1.1, 8)
 	TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 0)
-	TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 65)
 	TestCanSet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 1.1)
 end
 
