@@ -40,8 +40,8 @@ function Reader:SetBegin(value)
 	self._begin = value
 end
 
-function Reader:CanGet(count)
-	return self._buf:CanGet(self._index, self._begin, count)
+function Reader:CanHas(count)
+	return self._buf:CanHas(self._index, self._begin, count)
 end
 
 function Reader:Get(count)
@@ -108,8 +108,8 @@ function Writer:SetBegin(value)
 	self._begin = value
 end
 
-function Writer:CanSet(count)
-	return self._buf:CanSet(self._index, self._begin, count)
+function Writer:CanHas(count)
+	return self._buf:CanHas(self._index, self._begin, count)
 end
 
 function Writer:Set(count, value, reserve)
@@ -340,7 +340,7 @@ function Buffer.Increment(index, begin, count)
 	return Buffer.Normalize(index, begin + count)
 end
 
-local function CanHas(self, index, begin, count)
+function Buffer:CanHas(index, begin, count)
 	if (begin == nil) and (count == nil) then
 		begin = 1
 		count = 8
@@ -359,14 +359,6 @@ local function CanHas(self, index, begin, count)
 	end
 
 	return (Buffer.Increment(index, begin, count - 1) <= self._len)
-end
-
-function Buffer:CanGet(index, begin, count)
-	return CanHas(self, index, begin, count)
-end
-
-function Buffer:CanSet(index, begin, count)
-	return CanHas(self, index, begin, count)
 end
 
 function Buffer:Get(index, begin, count)

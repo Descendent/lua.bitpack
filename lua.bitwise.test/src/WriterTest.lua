@@ -93,7 +93,7 @@ function WriterTest:TestSet_WithNumberAndNumber()
 	TestSet_WithNumberAndNumber(1, 1, 64, 0xaaaaaaaaaaaaaaaa, "\170\170\170\170\170\170\170\170\170\170\170\170\170\170\170\170")
 end
 
-local function TestSet_WithNumberAndNumber_WhereNotCanSet(a, index, begin, count, value)
+local function TestSet_WithNumberAndNumber_WhereNotCanHas(a, index, begin, count, value)
 	local buf = New(a)
 	local o = buf:GetWriter(index, begin)
 
@@ -103,12 +103,12 @@ local function TestSet_WithNumberAndNumber_WhereNotCanSet(a, index, begin, count
 	end)
 end
 
-function WriterTest:TestSet_WithNumberAndNumber_WhereNotCanSet()
-	TestSet_WithNumberAndNumber_WhereNotCanSet(nil, 1, 1, 8, 0x0)
-	TestSet_WithNumberAndNumber_WhereNotCanSet("\000\000\000\000\000\000\000\000", 9, 1, 8, 0x0)
-	TestSet_WithNumberAndNumber_WhereNotCanSet("\000\000\000\000\000\000\000\000", 8, 2, 8, 0x0)
-	TestSet_WithNumberAndNumber_WhereNotCanSet("\000\000\000\000\000\000\000\000", 8, 1, 8, 0x0)
-	TestSet_WithNumberAndNumber_WhereNotCanSet("\000\000\000\000\000\000\000\000", 7, 2, 8, 0x0)
+function WriterTest:TestSet_WithNumberAndNumber_WhereNotCanHas()
+	TestSet_WithNumberAndNumber_WhereNotCanHas(nil, 1, 1, 8, 0x0)
+	TestSet_WithNumberAndNumber_WhereNotCanHas("\000\000\000\000\000\000\000\000", 9, 1, 8, 0x0)
+	TestSet_WithNumberAndNumber_WhereNotCanHas("\000\000\000\000\000\000\000\000", 8, 2, 8, 0x0)
+	TestSet_WithNumberAndNumber_WhereNotCanHas("\000\000\000\000\000\000\000\000", 8, 1, 8, 0x0)
+	TestSet_WithNumberAndNumber_WhereNotCanHas("\000\000\000\000\000\000\000\000", 7, 2, 8, 0x0)
 end
 
 local function TestSet_WithNumberAndNumberAndBoolean(index, begin, count, value, x)
@@ -154,7 +154,7 @@ function WriterTest:TestSetSignify_WithNumberAndNumber()
 	TestSetSignify_WithNumberAndNumber(1, 8, 1, -1, "\000")
 end
 
-local function TestSetSignify_WithNumberAndNumber_WhereNotCanSet(index, begin, count, value)
+local function TestSetSignify_WithNumberAndNumber_WhereNotCanHas(index, begin, count, value)
 	local buf = New()
 	local o = buf:GetWriter(index, begin)
 
@@ -163,13 +163,13 @@ local function TestSetSignify_WithNumberAndNumber_WhereNotCanSet(index, begin, c
 	end)
 end
 
-function WriterTest:TestSetSignify_WithNumberAndNumber_WhereNotCanSet()
-	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 1, 7, 127)
-	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 1, 7, -128)
-	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 1, 1, 1)
-	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 5, 7, 127)
-	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 5, 7, -128)
-	TestSetSignify_WithNumberAndNumber_WhereNotCanSet(1, 5, 1, 1)
+function WriterTest:TestSetSignify_WithNumberAndNumber_WhereNotCanHas()
+	TestSetSignify_WithNumberAndNumber_WhereNotCanHas(1, 1, 7, 127)
+	TestSetSignify_WithNumberAndNumber_WhereNotCanHas(1, 1, 7, -128)
+	TestSetSignify_WithNumberAndNumber_WhereNotCanHas(1, 1, 1, 1)
+	TestSetSignify_WithNumberAndNumber_WhereNotCanHas(1, 5, 7, 127)
+	TestSetSignify_WithNumberAndNumber_WhereNotCanHas(1, 5, 7, -128)
+	TestSetSignify_WithNumberAndNumber_WhereNotCanHas(1, 5, 1, 1)
 end
 
 local function TestSetNillify_WithNumberAndNumber(index, begin, count, value, x)

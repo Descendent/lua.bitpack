@@ -90,7 +90,7 @@ function ReaderTest:TestGet_WithNumber()
 	TestGet_WithNumber(1, 1, 64, {0x7713d038e6212845, 0x6c0ce934cf6654be})
 end
 
-local function TestGet_WithNumber_WhereNotCanGet(a, index, begin, count)
+local function TestGet_WithNumber_WhereNotCanHas(a, index, begin, count)
 	local buf = New(a)
 	local o = buf:GetReader(index, begin)
 
@@ -100,12 +100,12 @@ local function TestGet_WithNumber_WhereNotCanGet(a, index, begin, count)
 	end)
 end
 
-function ReaderTest:TestGet_WithNumber_WhereNotCanGet()
-	TestGet_WithNumber_WhereNotCanGet(nil, 1, 1, 8)
-	TestGet_WithNumber_WhereNotCanGet("\000\000\000\000\000\000\000\000", 9, 1, 8)
-	TestGet_WithNumber_WhereNotCanGet("\000\000\000\000\000\000\000\000", 8, 2, 8)
-	TestGet_WithNumber_WhereNotCanGet("\000\000\000\000\000\000\000\000", 8, 1, 8)
-	TestGet_WithNumber_WhereNotCanGet("\000\000\000\000\000\000\000\000", 7, 2, 8)
+function ReaderTest:TestGet_WithNumber_WhereNotCanHas()
+	TestGet_WithNumber_WhereNotCanHas(nil, 1, 1, 8)
+	TestGet_WithNumber_WhereNotCanHas("\000\000\000\000\000\000\000\000", 9, 1, 8)
+	TestGet_WithNumber_WhereNotCanHas("\000\000\000\000\000\000\000\000", 8, 2, 8)
+	TestGet_WithNumber_WhereNotCanHas("\000\000\000\000\000\000\000\000", 8, 1, 8)
+	TestGet_WithNumber_WhereNotCanHas("\000\000\000\000\000\000\000\000", 7, 2, 8)
 end
 
 local function TestGetSignify_WithNumber(a, index, begin, count, x)
