@@ -206,4 +206,29 @@ function WriterTest:TestSetBoolean_WithNumberAndNumber()
 	TestSetBoolean_WithNumberAndNumber(1, 1, 8, true, "\001")
 end
 
+local function TestReserve_WithNumber(a, index, begin, count, x)
+	local buf = New(a)
+	local o = buf:GetWriter(index, begin)
+
+	o:Reserve(count)
+
+	LuaUnit.assertEquals(ToString(buf), x)
+end
+
+function WriterTest:TestReserve_WithNumber()
+	TestReserve_WithNumber(nil, 0, 1, 8, "")
+	TestReserve_WithNumber(nil, 1, 1, 8, "\000")
+	TestReserve_WithNumber(nil, 8, 1, 8, "\000\000\000\000\000\000\000\000")
+	TestReserve_WithNumber(nil, 9, 1, 8, "\000\000\000\000\000\000\000\000\000")
+	TestReserve_WithNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 0, 1, 8, "")
+	TestReserve_WithNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 1, 1, 8, "\069")
+	TestReserve_WithNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 8, 1, 8, "\069\040\033\230\056\208\019\119")
+	TestReserve_WithNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 9, 1, 8, "\069\040\033\230\056\208\019\119\190")
+	TestReserve_WithNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 17, 1, 8, "\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108\000")
+	TestReserve_WithNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 8, 5, 8, "\069\040\033\230\056\208\019\119\014")
+	TestReserve_WithNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 1, 1, 0, "")
+	TestReserve_WithNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 2, 1, 0, "\069")
+	TestReserve_WithNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 1, 1, 72, "\069\040\033\230\056\208\019\119\190")
+end
+
 return WriterTest

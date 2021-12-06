@@ -114,7 +114,7 @@ end
 
 function Writer:Set(count, value, reserve)
 	if reserve then
-		self._buf:Reserve(self._index, self._begin, count)
+		self:Reserve(count)
 	end
 
 	self._buf:Set(self._index, self._begin, count, value)
@@ -143,6 +143,10 @@ function Writer:SetBoolean(count, value, reserve)
 	end
 
 	self:Set(count, value, reserve)
+end
+
+function Writer:Reserve(count)
+	self._buf:Reserve(self._index, self._begin, count)
 end
 
 --------------------------------------------------------------------------------
