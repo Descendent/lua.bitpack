@@ -4,95 +4,38 @@ local Buffer = require("Buffer")
 
 local BufferTest = {}
 
-local function New(str)
-	local buf = Buffer.New()
-
-	if str == nil then
-		return buf
-	end
-
-	buf:Reserve(#str)
-
-	local index = 1
-	local begin = 1
-	for i = 1, #str do
-		buf:Set(index, begin, 8, string.byte(str, i))
-		index, begin = Buffer.Increment(index, begin, 8)
-	end
-
-	return buf
-end
-
-local function ToString(buf)
-	local str = {}
-
-	local index = 1
-	local begin = 1
-	for i = 1, #buf do
-		str[i] = string.char(buf:Get(index, begin, 8))
-		index, begin = Buffer.Increment(index, begin, 8)
-	end
-
-	return table.concat(str)
-end
-
 local function TestNew()
 	local o = Buffer.New()
 
-	LuaUnit.assertEquals(ToString(o), "")
+	LuaUnit.assertEquals(tostring(o), "")
 end
 
 function BufferTest:TestNew()
 	TestNew()
 end
 
-local function TestNew_WithString(a, x)
+local function TestNew_WithString(a)
 	local o = Buffer.New(a)
 
-	LuaUnit.assertEquals(ToString(o), x)
+	LuaUnit.assertEquals(tostring(o), a)
 end
 
 function BufferTest:TestNew_WithString()
-	TestNew_WithString("", "")
-	TestNew_WithString("00", "\x00")
-	TestNew_WithString("H5", "\x86")
-	TestNew_WithString("Hed", "\x86\x4F")
-	TestNew_WithString("Helj", "\x86\x4F\xD2")
-	TestNew_WithString("Hello", "\x86\x4F\xD2\x6F")
-	TestNew_WithString("HelloWe", "\x86\x4F\xD2\x6F\xB5")
-	TestNew_WithString("HelloWoi", "\x86\x4F\xD2\x6F\xB5\x59")
-	TestNew_WithString("HelloWork", "\x86\x4F\xD2\x6F\xB5\x59\xF7")
-
-	-- https://github.com/zeromq/rfc/blob/master/src/spec_32.c
-	TestNew_WithString("HelloWorld", "\x86\x4F\xD2\x6F\xB5\x59\xF7\x5B")
-	TestNew_WithString("JTKVSB%%)wK0E.X)V>+}o?pNmC{O&4W4b!Ni{Lh6", "\x8E\x0B\xDD\x69\x76\x28\xB9\x1D\x8F\x24\x55\x87\xEE\x95\xC5\xB0\x4D\x48\x96\x3F\x79\x25\x98\x77\xB4\x9C\xD9\x06\x3A\xEA\xD3\xB7")
-end
-
-local function TestNew_WithString_WhereNotValid(a)
-	local o
-
-	LuaUnit.assertError(function ()
-		o = Buffer.New(a)
-	end)
-end
-
-function BufferTest:TestNew_WithString_WhereNotValid()
-	TestNew_WithString_WhereNotValid("0")
-	TestNew_WithString_WhereNotValid("0000\000")
-	TestNew_WithString_WhereNotValid("0000\031")
-	TestNew_WithString_WhereNotValid("0000\128")
-	TestNew_WithString_WhereNotValid("0000\255")
-	TestNew_WithString_WhereNotValid("0000 ")
-	TestNew_WithString_WhereNotValid("0000\"")
-	TestNew_WithString_WhereNotValid("0000\'")
-	TestNew_WithString_WhereNotValid("0000,")
-	TestNew_WithString_WhereNotValid("0000;")
-	TestNew_WithString_WhereNotValid("0000\\")
-	TestNew_WithString_WhereNotValid("0000_")
-	TestNew_WithString_WhereNotValid("0000`")
-	TestNew_WithString_WhereNotValid("0000|")
-	TestNew_WithString_WhereNotValid("0000~")
-	TestNew_WithString_WhereNotValid("0000\127")
+	TestNew_WithString("")
+	TestNew_WithString("\000")
+	TestNew_WithString("\255")
+	TestNew_WithString("\069")
+	TestNew_WithString("\000\000\000\000\000\000\000\000")
+	TestNew_WithString("\255\255\255\255\255\255\255\255")
+	TestNew_WithString("\069\040\033\230\056\208\019\119")
+	TestNew_WithString("\000\000\000\000\000\000\000\000\000")
+	TestNew_WithString("\255\255\255\255\255\255\255\255\255")
+	TestNew_WithString("\069\040\033\230\056\208\019\119\190")
+	TestNew_WithString("\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000")
+	TestNew_WithString("\255\255\255\255\255\255\255\255\255\255\255\255\255\255\255\255")
+	TestNew_WithString("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	TestNew_WithString(string.rep("\000", 16 * 1024))
+	TestNew_WithString(string.rep("\255", 16 * 1024))
 end
 
 local function TestNormalize(index, begin, x, y)
@@ -127,7 +70,7 @@ function BufferTest:TestIncrement()
 end
 
 local function TestCanHas_WithNumber(a, index, x)
-	local o = New(a)
+	local o = Buffer.New(a)
 
 	LuaUnit.assertEquals(o:CanHas(index), x)
 end
@@ -139,7 +82,7 @@ function BufferTest:TestCanHas_WithNumber()
 end
 
 local function TestCanHas_WithNumber_WhereNotValid(index)
-	local o = New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
 		o:CanHas(index)
@@ -152,7 +95,7 @@ function BufferTest:TestCanHas_WithNumber_WhereNotValid()
 end
 
 local function TestCanHas_WithNumberAndNumberAndNumber(a, index, begin, count, x)
-	local o = New(a)
+	local o = Buffer.New(a)
 
 	LuaUnit.assertEquals(o:CanHas(index, begin, count), x)
 end
@@ -167,7 +110,7 @@ function BufferTest:TestCanHas_WithNumberAndNumberAndNumber()
 end
 
 local function TestCanHas_WithNumberAndNumberAndNumber_WhereNotValid(index, begin, count)
-	local o = New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
 		o:CanHas(index, begin, count)
@@ -186,7 +129,7 @@ end
 
 local function TestGet_WithNumber(index, x)
 	-- 45 28 21 e6 38 d0 13 77 be 54 66 cf 34 e9 0c 6c
-	local o = New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertEquals(o:Get(index), x)
 end
@@ -198,7 +141,7 @@ function BufferTest:TestGet_WithNumber()
 end
 
 local function TestGet_WithNumber_WhereNotValid(index)
-	local o = New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
 		o:Get(index)
@@ -213,7 +156,7 @@ end
 
 local function TestGet_WithNumberAndNumberAndNumber(index, begin, count, x)
 	-- 45 28 21 e6 38 d0 13 77 be 54 66 cf 34 e9 0c 6c
-	local o = New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertEquals(o:Get(index, begin, count), x)
 end
@@ -225,7 +168,7 @@ function BufferTest:TestGet_WithNumberAndNumberAndNumber()
 end
 
 local function TestGet_WithNumberAndNumberAndNumber_WhereNotValid(index, begin, count)
-	local o = New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
 		o:Get(index, begin, count)
@@ -246,11 +189,11 @@ end
 
 local function TestSet_WithNumberAndNumber(index, value, x)
 	-- 45 28 21 e6 38 d0 13 77 be 54 66 cf 34 e9 0c 6c
-	local o = New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	o:Set(index, value)
 
-	LuaUnit.assertEquals(ToString(o), x)
+	LuaUnit.assertEquals(tostring(o), x)
 end
 
 function BufferTest:TestSet_WithNumberAndNumber()
@@ -260,7 +203,7 @@ function BufferTest:TestSet_WithNumberAndNumber()
 end
 
 local function TestSet_WithNumberAndNumber_WhereNotValid(index, value)
-	local o = New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
 		o:Set(index, value)
@@ -276,11 +219,11 @@ end
 
 local function TestSet_WithNumberAndNumberAndNumberAndNumber(index, begin, count, value, x)
 	-- 45 28 21 e6 38 d0 13 77 be 54 66 cf 34 e9 0c 6c
-	local o = New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	o:Set(index, begin, count, value)
 
-	LuaUnit.assertEquals(ToString(o), x)
+	LuaUnit.assertEquals(tostring(o), x)
 end
 
 function BufferTest:TestSet_WithNumberAndNumberAndNumberAndNumber()
@@ -291,7 +234,7 @@ function BufferTest:TestSet_WithNumberAndNumberAndNumberAndNumber()
 end
 
 local function TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(index, begin, count, value)
-	local o = New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
 		o:Set(index, begin, count, value)
@@ -312,11 +255,11 @@ function BufferTest:TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(
 end
 
 local function TestReserve_WithNumber(a, index, x)
-	local o = New(a)
+	local o = Buffer.New(a)
 
 	o:Reserve(index)
 
-	LuaUnit.assertEquals(ToString(o), x)
+	LuaUnit.assertEquals(tostring(o), x)
 end
 
 function BufferTest:TestReserve_WithNumber()
@@ -332,7 +275,7 @@ function BufferTest:TestReserve_WithNumber()
 end
 
 local function TestReserve_WithNumber_WhereNotValid(index)
-	local o = New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
 		o:Reserve(index)
@@ -345,11 +288,11 @@ function BufferTest:TestReserve_WithNumber_WhereNotValid()
 end
 
 local function TestReserve_WithNumberAndNumberAndNumber(a, index, begin, count, x)
-	local o = New(a)
+	local o = Buffer.New(a)
 
 	o:Reserve(index, begin, count)
 
-	LuaUnit.assertEquals(ToString(o), x)
+	LuaUnit.assertEquals(tostring(o), x)
 end
 
 function BufferTest:TestReserve_WithNumberAndNumberAndNumber()
@@ -369,7 +312,7 @@ function BufferTest:TestReserve_WithNumberAndNumberAndNumber()
 end
 
 local function TestReserve_WithNumberAndNumberAndNumber_WhereNotValid(index, begin, count)
-	local o = New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
+	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
 		o:Reserve(index, begin, count)
@@ -386,12 +329,12 @@ function BufferTest:TestReserve_WithNumberAndNumberAndNumber_WhereNotValid()
 end
 
 local function TestMetamethodLen(a, index)
-	local o = New(a)
+	local o = Buffer.New(a)
 
 	o:Reserve(index)
 
 	LuaUnit.assertEquals(#o, index)
-	LuaUnit.assertEquals(#o, #ToString(o))
+	LuaUnit.assertEquals(#o, #tostring(o))
 end
 
 function BufferTest:TestMetamethodLen()
@@ -404,29 +347,6 @@ function BufferTest:TestMetamethodLen()
 	TestMetamethodLen("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 8)
 	TestMetamethodLen("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 9)
 	TestMetamethodLen("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 17)
-end
-
-local function TestMetamethodTostring(a, x)
-	local o = New(a)
-
-	LuaUnit.assertEquals(tostring(o), x)
-end
-
-function BufferTest:TestMetamethodTostring()
-	TestMetamethodTostring(nil, "")
-	TestMetamethodTostring("", "")
-	TestMetamethodTostring("\x00", "00")
-	TestMetamethodTostring("\x86", "H5")
-	TestMetamethodTostring("\x86\x4F", "Hed")
-	TestMetamethodTostring("\x86\x4F\xD2", "Helj")
-	TestMetamethodTostring("\x86\x4F\xD2\x6F", "Hello")
-	TestMetamethodTostring("\x86\x4F\xD2\x6F\xB5", "HelloWe")
-	TestMetamethodTostring("\x86\x4F\xD2\x6F\xB5\x59", "HelloWoi")
-	TestMetamethodTostring("\x86\x4F\xD2\x6F\xB5\x59\xF7", "HelloWork")
-
-	-- https://github.com/zeromq/rfc/blob/master/src/spec_32.c
-	TestMetamethodTostring("\x86\x4F\xD2\x6F\xB5\x59\xF7\x5B", "HelloWorld")
-	TestMetamethodTostring("\x8E\x0B\xDD\x69\x76\x28\xB9\x1D\x8F\x24\x55\x87\xEE\x95\xC5\xB0\x4D\x48\x96\x3F\x79\x25\x98\x77\xB4\x9C\xD9\x06\x3A\xEA\xD3\xB7", "JTKVSB%%)wK0E.X)V>+}o?pNmC{O&4W4b!Ni{Lh6")
 end
 
 return BufferTest
