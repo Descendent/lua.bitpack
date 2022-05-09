@@ -164,7 +164,7 @@ end
 function BufferTest:TestGet_WithNumberAndNumberAndNumber()
 	TestGet_WithNumberAndNumberAndNumber(1, 1, 8, 0x45)
 	TestGet_WithNumberAndNumberAndNumber(8, 5, 8, 0xe7)
-	TestGet_WithNumberAndNumberAndNumber(1, 1, 64, 0x7713d038e6212845)
+	TestGet_WithNumberAndNumberAndNumber(1, 1, 32, 0xe6212845)
 end
 
 local function TestGet_WithNumberAndNumberAndNumber_WhereNotValid(index, begin, count)
@@ -183,7 +183,7 @@ function BufferTest:TestGet_WithNumberAndNumberAndNumber_WhereNotValid()
 	TestGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 9, 8)
 	TestGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1.1, 8)
 	TestGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 0)
-	TestGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 65)
+	TestGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 33)
 	TestGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 1.1)
 end
 
@@ -229,8 +229,8 @@ end
 function BufferTest:TestSet_WithNumberAndNumberAndNumberAndNumber()
 	TestSet_WithNumberAndNumberAndNumberAndNumber(1, 1, 8, 0xaa, "\170\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 	TestSet_WithNumberAndNumberAndNumberAndNumber(8, 5, 8, 0xaa, "\069\040\033\230\056\208\019\167\186\084\102\207\052\233\012\108")
-	TestSet_WithNumberAndNumberAndNumberAndNumber(1, 1, 64, 0xaa, "\170\000\000\000\000\000\000\000\190\084\102\207\052\233\012\108")
-	TestSet_WithNumberAndNumberAndNumberAndNumber(1, 1, 64, 0xaaaaaaaaaaaaaaaa, "\170\170\170\170\170\170\170\170\190\084\102\207\052\233\012\108")
+	TestSet_WithNumberAndNumberAndNumberAndNumber(1, 1, 32, 0xaa, "\170\000\000\000\056\208\019\119\190\084\102\207\052\233\012\108")
+	TestSet_WithNumberAndNumberAndNumberAndNumber(1, 1, 32, 0xaaaaaaaa, "\170\170\170\170\056\208\019\119\190\084\102\207\052\233\012\108")
 end
 
 local function TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(index, begin, count, value)
@@ -249,7 +249,7 @@ function BufferTest:TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(
 	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(1, 9, 8, 0x0)
 	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(1, 1.1, 8, 0x0)
 	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(1, 1, 0, 0x0)
-	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(1, 1, 65, 0x0)
+	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(1, 1, 33, 0x0)
 	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(1, 1, 1.1, 0x0)
 	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(1, 1, 8, 0x1ff)
 end

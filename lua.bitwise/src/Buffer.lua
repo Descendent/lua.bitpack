@@ -7,8 +7,8 @@ local function GetFormatter(self)
 	-- Format-string for `string.pack` and `string.unpack`
 	-- https://www.lua.org/manual/5.3/manual.html#6.4.2
 
-	return "<" .. string.rep("j", self._len // 8)
-		.. string.rep("I" .. (self._len % 8), math.min(1, self._len % 8))
+	return "<" .. string.rep("I4", self._len // 4)
+		.. string.rep("I" .. (self._len % 4), math.min(1, self._len % 4))
 end
 
 function Buffer.New(str)
@@ -19,7 +19,7 @@ function Buffer.New(str)
 	local self = setmetatable({}, Buffer)
 
 	self._len = #str
-	self._n = ((self._len - 1) // 8) + 1
+	self._n = ((self._len - 1) // 4) + 1
 	self._bin = {string.unpack(GetFormatter(self), str)}
 	table.remove(self._bin)
 
@@ -69,13 +69,13 @@ function Buffer:Get(index, begin, count)
 		assert(begin <= 8)
 
 		assert(count >= 1)
-		assert(count <= 64)
+		assert(count <= 32)
 	end
 
-	local i = ((index - 1) // 8) + 1
+	local i = ((index - 1) // 4) + 1
 
-	local aBegin = (((index - 1) % 8) * 8) + begin
-	local aCount = math.min(count, 64 - (aBegin - 1))
+	local aBegin = (((index - 1) % 4) * 8) + begin
+	local aCount = math.min(count, 32 - (aBegin - 1))
 	local a = (self._bin[i] >> (aBegin - 1))
 		& ((1 << aCount) - 1)
 
@@ -106,15 +106,15 @@ function Buffer:Set(index, begin, count, value)
 		assert(begin <= 8)
 
 		assert(count >= 1)
-		assert(count <= 64)
+		assert(count <= 32)
 
 		assert(value == value & ((1 << count) - 1))
 	end
 
-	local i = ((index - 1) // 8) + 1
+	local i = ((index - 1) // 4) + 1
 
-	local aBegin = (((index - 1) % 8) * 8) + begin
-	local aCount = math.min(count, 64 - (aBegin - 1))
+	local aBegin = (((index - 1) % 4) * 8) + begin
+	local aCount = math.min(count, 32 - (aBegin - 1))
 	self._bin[i] = (self._bin[i] & ~(((1 << aCount) - 1) << (aBegin - 1))) -- Clear
 		| ((value & ((1 << aCount) - 1)) << (aBegin - 1))
 
@@ -136,7 +136,7 @@ local function Reserve_0(self)
 end
 
 local function Reserve_N(self, index, begin, count)
-	local n = ((index - 1) // 8) + 1
+	local n = ((index - 1) // 4) + 1
 
 	for i = self._n + 1, n do
 		self._bin[i] = 0
@@ -146,7 +146,7 @@ local function Reserve_N(self, index, begin, count)
 		self._bin[i] = nil
 	end
 
-	local aCount = (((index - 1) % 8) * 8) + count
+	local aCount = (((index - 1) % 4) * 8) + count
 	self._bin[n] = self._bin[n] & ((1 << aCount) - 1)
 
 	if index == self._len then

@@ -58,8 +58,8 @@ end
 function BufferWriterTest:TestSet_WithNumberAndNumber()
 	TestSet_WithNumberAndNumber(1, 1, 8, 0xaa, "\170\170\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 	TestSet_WithNumberAndNumber(8, 5, 8, 0xaa, "\069\040\033\230\056\208\019\167\170\090\102\207\052\233\012\108")
-	TestSet_WithNumberAndNumber(1, 1, 64, 0xaa, "\170\000\000\000\000\000\000\000\170\000\000\000\000\000\000\000")
-	TestSet_WithNumberAndNumber(1, 1, 64, 0xaaaaaaaaaaaaaaaa, "\170\170\170\170\170\170\170\170\170\170\170\170\170\170\170\170")
+	TestSet_WithNumberAndNumber(1, 1, 32, 0xaa, "\170\000\000\000\170\000\000\000\190\084\102\207\052\233\012\108")
+	TestSet_WithNumberAndNumber(1, 1, 32, 0xaaaaaaaa, "\170\170\170\170\170\170\170\170\190\084\102\207\052\233\012\108")
 end
 
 local function TestSet_WithNumberAndNumber_WhereNotCanHas(a, index, begin, count, value)
@@ -93,8 +93,8 @@ end
 function BufferWriterTest:TestSet_WithNumberAndNumberAndBoolean()
 	TestSet_WithNumberAndNumberAndBoolean(1, 1, 8, 0xaa, "\170\170")
 	TestSet_WithNumberAndNumberAndBoolean(8, 5, 8, 0xaa, "\000\000\000\000\000\000\000\160\170\010")
-	TestSet_WithNumberAndNumberAndBoolean(1, 1, 64, 0xaa, "\170\000\000\000\000\000\000\000\170\000\000\000\000\000\000\000")
-	TestSet_WithNumberAndNumberAndBoolean(1, 1, 64, 0xaaaaaaaaaaaaaaaa, "\170\170\170\170\170\170\170\170\170\170\170\170\170\170\170\170")
+	TestSet_WithNumberAndNumberAndBoolean(1, 1, 32, 0xaa, "\170\000\000\000\170\000\000\000")
+	TestSet_WithNumberAndNumberAndBoolean(1, 1, 32, 0xaaaaaaaa, "\170\170\170\170\170\170\170\170")
 end
 
 local function TestSetSignify_WithNumberAndNumber(index, begin, count, value, x)
@@ -113,8 +113,8 @@ function BufferWriterTest:TestSetSignify_WithNumberAndNumber()
 	TestSetSignify_WithNumberAndNumber(1, 1, 1, 0, "\001")
 	TestSetSignify_WithNumberAndNumber(1, 1, 2, 1, "\003")
 	TestSetSignify_WithNumberAndNumber(1, 1, 1, -1, "\000")
-	TestSetSignify_WithNumberAndNumber(1, 1, 64, (1 << 63) - 1, "\255\255\255\255\255\255\255\255")
-	TestSetSignify_WithNumberAndNumber(1, 1, 64, -(1 << 63), "\000\000\000\000\000\000\000\000")
+	TestSetSignify_WithNumberAndNumber(1, 1, 32, (1 << 31) - 1, "\255\255\255\255")
+	TestSetSignify_WithNumberAndNumber(1, 1, 32, -(1 << 31), "\000\000\000\000")
 	TestSetSignify_WithNumberAndNumber(1, 5, 8, 127, "\240\015")
 	TestSetSignify_WithNumberAndNumber(1, 5, 8, -128, "\000\000")
 	TestSetSignify_WithNumberAndNumber(1, 5, 8, 0, "\000\008")
