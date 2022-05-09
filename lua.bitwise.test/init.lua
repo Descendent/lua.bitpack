@@ -1,14 +1,14 @@
 local LuaUnit = require("luaunit")
 
 local BufferTest = require("BufferTest")
-local ReaderTest = require("ReaderTest")
-local WriterTest = require("WriterTest")
+local BufferReaderTest = require("BufferReaderTest")
+local BufferWriterTest = require("BufferWriterTest")
 
 local luaUnit = LuaUnit.LuaUnit.new()
 
 luaUnit:runSuiteByInstances({
 	{"BufferTest", BufferTest},
-	{"ReaderTest", ReaderTest},
-	{"WriterTest", WriterTest}})
+	{"BufferReaderTest", BufferReaderTest},
+	{"BufferWriterTest", BufferWriterTest}})
 
 os.exit((luaUnit.result.notSuccessCount == nil) or (luaUnit.result.notSuccessCount == 0))

@@ -2,7 +2,7 @@ local LuaUnit = require("luaunit")
 
 local Buffer = require("Buffer")
 
-local WriterTest = {}
+local BufferWriterTest = {}
 
 local function TestNew_WithBuffer()
 	local buf = Buffer.New()
@@ -12,7 +12,7 @@ local function TestNew_WithBuffer()
 	LuaUnit.assertEquals(o:GetBegin(), 1)
 end
 
-function WriterTest:TestNew_WithBuffer()
+function BufferWriterTest:TestNew_WithBuffer()
 	TestNew_WithBuffer()
 end
 
@@ -24,7 +24,7 @@ local function TestNew_WithBufferAndNumber(index)
 	LuaUnit.assertEquals(o:GetBegin(), 1)
 end
 
-function WriterTest:TestNew_WithBufferAndNumber()
+function BufferWriterTest:TestNew_WithBufferAndNumber()
 	TestNew_WithBufferAndNumber(1)
 	TestNew_WithBufferAndNumber(8)
 end
@@ -37,7 +37,7 @@ local function TestNew_WithBufferAndNumberAndNumber(index, begin)
 	LuaUnit.assertEquals(o:GetBegin(), begin)
 end
 
-function WriterTest:TestNew_WithBufferAndNumberAndNumber()
+function BufferWriterTest:TestNew_WithBufferAndNumberAndNumber()
 	TestNew_WithBufferAndNumberAndNumber(1, 1)
 	TestNew_WithBufferAndNumberAndNumber(8, 1)
 	TestNew_WithBufferAndNumberAndNumber(1, 8)
@@ -54,7 +54,7 @@ local function TestSet_WithNumberAndNumber(index, begin, count, value, x)
 	LuaUnit.assertEquals(tostring(buf), x)
 end
 
-function WriterTest:TestSet_WithNumberAndNumber()
+function BufferWriterTest:TestSet_WithNumberAndNumber()
 	TestSet_WithNumberAndNumber(1, 1, 8, 0xaa, "\170\170\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 	TestSet_WithNumberAndNumber(8, 5, 8, 0xaa, "\069\040\033\230\056\208\019\167\170\090\102\207\052\233\012\108")
 	TestSet_WithNumberAndNumber(1, 1, 64, 0xaa, "\170\000\000\000\000\000\000\000\170\000\000\000\000\000\000\000")
@@ -71,7 +71,7 @@ local function TestSet_WithNumberAndNumber_WhereNotCanHas(a, index, begin, count
 	end)
 end
 
-function WriterTest:TestSet_WithNumberAndNumber_WhereNotCanHas()
+function BufferWriterTest:TestSet_WithNumberAndNumber_WhereNotCanHas()
 	TestSet_WithNumberAndNumber_WhereNotCanHas(nil, 1, 1, 8, 0x0)
 	TestSet_WithNumberAndNumber_WhereNotCanHas("\000\000\000\000\000\000\000\000", 9, 1, 8, 0x0)
 	TestSet_WithNumberAndNumber_WhereNotCanHas("\000\000\000\000\000\000\000\000", 8, 2, 8, 0x0)
@@ -89,7 +89,7 @@ local function TestSet_WithNumberAndNumberAndBoolean(index, begin, count, value,
 	LuaUnit.assertEquals(tostring(buf), x)
 end
 
-function WriterTest:TestSet_WithNumberAndNumberAndBoolean()
+function BufferWriterTest:TestSet_WithNumberAndNumberAndBoolean()
 	TestSet_WithNumberAndNumberAndBoolean(1, 1, 8, 0xaa, "\170\170")
 	TestSet_WithNumberAndNumberAndBoolean(8, 5, 8, 0xaa, "\000\000\000\000\000\000\000\160\170\010")
 	TestSet_WithNumberAndNumberAndBoolean(1, 1, 64, 0xaa, "\170\000\000\000\000\000\000\000\170\000\000\000\000\000\000\000")
@@ -105,7 +105,7 @@ local function TestSetSignify_WithNumberAndNumber(index, begin, count, value, x)
 	LuaUnit.assertEquals(tostring(buf), x)
 end
 
-function WriterTest:TestSetSignify_WithNumberAndNumber()
+function BufferWriterTest:TestSetSignify_WithNumberAndNumber()
 	TestSetSignify_WithNumberAndNumber(1, 1, 8, 127, "\255")
 	TestSetSignify_WithNumberAndNumber(1, 1, 8, -128, "\000")
 	TestSetSignify_WithNumberAndNumber(1, 1, 8, 0, "\128")
@@ -131,7 +131,7 @@ local function TestSetSignify_WithNumberAndNumber_WhereNotCanHas(index, begin, c
 	end)
 end
 
-function WriterTest:TestSetSignify_WithNumberAndNumber_WhereNotCanHas()
+function BufferWriterTest:TestSetSignify_WithNumberAndNumber_WhereNotCanHas()
 	TestSetSignify_WithNumberAndNumber_WhereNotCanHas(1, 1, 7, 127)
 	TestSetSignify_WithNumberAndNumber_WhereNotCanHas(1, 1, 7, -128)
 	TestSetSignify_WithNumberAndNumber_WhereNotCanHas(1, 1, 1, 1)
@@ -149,7 +149,7 @@ local function TestSetNillify_WithNumberAndNumber(index, begin, count, value, x)
 	LuaUnit.assertEquals(tostring(buf), x)
 end
 
-function WriterTest:TestSetNillify_WithNumberAndNumber()
+function BufferWriterTest:TestSetNillify_WithNumberAndNumber()
 	TestSetNillify_WithNumberAndNumber(1, 1, 8, nil, "\000")
 	TestSetNillify_WithNumberAndNumber(1, 1, 8, 255, "\255")
 end
@@ -163,7 +163,7 @@ local function TestSetBoolean_WithNumberAndNumber(index, begin, count, value, x)
 	LuaUnit.assertEquals(tostring(buf), x)
 end
 
-function WriterTest:TestSetBoolean_WithNumberAndNumber()
+function BufferWriterTest:TestSetBoolean_WithNumberAndNumber()
 	TestSetBoolean_WithNumberAndNumber(1, 1, 1, false, "\000")
 	TestSetBoolean_WithNumberAndNumber(1, 1, 1, true, "\001")
 	TestSetBoolean_WithNumberAndNumber(1, 1, 1, nil, "\000")
@@ -183,7 +183,7 @@ local function TestReserve_WithNumber(a, index, begin, count, x)
 	LuaUnit.assertEquals(tostring(buf), x)
 end
 
-function WriterTest:TestReserve_WithNumber()
+function BufferWriterTest:TestReserve_WithNumber()
 	TestReserve_WithNumber(nil, 0, 1, 8, "")
 	TestReserve_WithNumber(nil, 1, 1, 8, "\000")
 	TestReserve_WithNumber(nil, 8, 1, 8, "\000\000\000\000\000\000\000\000")
@@ -199,4 +199,4 @@ function WriterTest:TestReserve_WithNumber()
 	TestReserve_WithNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 1, 1, 72, "\069\040\033\230\056\208\019\119\190")
 end
 
-return WriterTest
+return BufferWriterTest

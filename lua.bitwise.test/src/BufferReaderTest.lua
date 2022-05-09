@@ -2,7 +2,7 @@ local LuaUnit = require("luaunit")
 
 local Buffer = require("Buffer")
 
-local ReaderTest = {}
+local BufferReaderTest = {}
 
 local function TestNew_WithBuffer()
 	local buf = Buffer.New()
@@ -12,7 +12,7 @@ local function TestNew_WithBuffer()
 	LuaUnit.assertEquals(o:GetBegin(), 1)
 end
 
-function ReaderTest:TestNew_WithBuffer()
+function BufferReaderTest:TestNew_WithBuffer()
 	TestNew_WithBuffer()
 end
 
@@ -24,7 +24,7 @@ local function TestNew_WithBufferAndNumber(index)
 	LuaUnit.assertEquals(o:GetBegin(), 1)
 end
 
-function ReaderTest:TestNew_WithBufferAndNumber()
+function BufferReaderTest:TestNew_WithBufferAndNumber()
 	TestNew_WithBufferAndNumber(1)
 	TestNew_WithBufferAndNumber(8)
 end
@@ -37,7 +37,7 @@ local function TestNew_WithBufferAndNumberAndNumber(index, begin)
 	LuaUnit.assertEquals(o:GetBegin(), begin)
 end
 
-function ReaderTest:TestNew_WithBufferAndNumberAndNumber()
+function BufferReaderTest:TestNew_WithBufferAndNumberAndNumber()
 	TestNew_WithBufferAndNumberAndNumber(1, 1)
 	TestNew_WithBufferAndNumberAndNumber(8, 1)
 	TestNew_WithBufferAndNumberAndNumber(1, 8)
@@ -52,7 +52,7 @@ local function TestGet_WithNumber(index, begin, count, x)
 	LuaUnit.assertEquals(o:Get(count), x[2])
 end
 
-function ReaderTest:TestGet_WithNumber()
+function BufferReaderTest:TestGet_WithNumber()
 	TestGet_WithNumber(1, 1, 8, {0x45, 0x28})
 	TestGet_WithNumber(8, 5, 8, {0xe7, 0x4b})
 	TestGet_WithNumber(1, 1, 64, {0x7713d038e6212845, 0x6c0ce934cf6654be})
@@ -68,7 +68,7 @@ local function TestGet_WithNumber_WhereNotCanHas(a, index, begin, count)
 	end)
 end
 
-function ReaderTest:TestGet_WithNumber_WhereNotCanHas()
+function BufferReaderTest:TestGet_WithNumber_WhereNotCanHas()
 	TestGet_WithNumber_WhereNotCanHas(nil, 1, 1, 8)
 	TestGet_WithNumber_WhereNotCanHas("\000\000\000\000\000\000\000\000", 9, 1, 8)
 	TestGet_WithNumber_WhereNotCanHas("\000\000\000\000\000\000\000\000", 8, 2, 8)
@@ -83,7 +83,7 @@ local function TestGetSignify_WithNumber(a, index, begin, count, x)
 	LuaUnit.assertEquals(o:GetSignify(count), x)
 end
 
-function ReaderTest:TestGetSignify_WithNumber()
+function BufferReaderTest:TestGetSignify_WithNumber()
 	TestGetSignify_WithNumber("\255", 1, 1, 8, 127)
 	TestGetSignify_WithNumber("\000", 1, 1, 8, -128)
 	TestGetSignify_WithNumber("\128", 1, 1, 8, 0)
@@ -107,7 +107,7 @@ local function TestGetNillify_WithNumber(a, index, begin, count, x)
 	LuaUnit.assertEquals(o:GetNillify(count), x)
 end
 
-function ReaderTest:TestGetNillify_WithNumber()
+function BufferReaderTest:TestGetNillify_WithNumber()
 	TestGetNillify_WithNumber("\000", 1, 1, 8, nil)
 	TestGetNillify_WithNumber("\255", 1, 1, 8, 255)
 end
@@ -119,11 +119,11 @@ local function TestGetBoolean_WithNumber(a, index, begin, count, x)
 	LuaUnit.assertEquals(o:GetBoolean(count), x)
 end
 
-function ReaderTest:TestGetBoolean_WithNumber()
+function BufferReaderTest:TestGetBoolean_WithNumber()
 	TestGetBoolean_WithNumber("\000", 1, 1, 1, false)
 	TestGetBoolean_WithNumber("\001", 1, 1, 1, true)
 	TestGetBoolean_WithNumber("\000", 1, 1, 8, false)
 	TestGetBoolean_WithNumber("\255", 1, 1, 8, true)
 end
 
-return ReaderTest
+return BufferReaderTest
