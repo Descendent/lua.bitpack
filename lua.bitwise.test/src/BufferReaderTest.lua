@@ -1,12 +1,13 @@
 local LuaUnit = require("luaunit")
 
 local Buffer = require("Buffer")
+local BufferReader = require("BufferReader")
 
 local BufferReaderTest = {}
 
 local function TestNew_WithBuffer()
 	local buf = Buffer.New()
-	local o = buf:GetReader()
+	local o = BufferReader.New(buf)
 
 	LuaUnit.assertEquals(o:GetIndex(), 1)
 	LuaUnit.assertEquals(o:GetBegin(), 1)
@@ -18,7 +19,7 @@ end
 
 local function TestNew_WithBufferAndNumber(index)
 	local buf = Buffer.New()
-	local o = buf:GetReader(index)
+	local o = BufferReader.New(buf, index)
 
 	LuaUnit.assertEquals(o:GetIndex(), index)
 	LuaUnit.assertEquals(o:GetBegin(), 1)
@@ -31,7 +32,7 @@ end
 
 local function TestNew_WithBufferAndNumberAndNumber(index, begin)
 	local buf = Buffer.New()
-	local o = buf:GetReader(index, begin)
+	local o = BufferReader.New(buf, index, begin)
 
 	LuaUnit.assertEquals(o:GetIndex(), index)
 	LuaUnit.assertEquals(o:GetBegin(), begin)
@@ -46,7 +47,7 @@ end
 local function TestGet_WithNumber(index, begin, count, x)
 	-- 45 28 21 e6 38 d0 13 77 be 54 66 cf 34 e9 0c 6c
 	local buf = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
-	local o = buf:GetReader(index, begin)
+	local o = BufferReader.New(buf, index, begin)
 
 	LuaUnit.assertEquals(o:Get(count), x[1])
 	LuaUnit.assertEquals(o:Get(count), x[2])
@@ -60,7 +61,7 @@ end
 
 local function TestGet_WithNumber_WhereNotCanHas(a, index, begin, count)
 	local buf = Buffer.New(a)
-	local o = buf:GetReader(index, begin)
+	local o = BufferReader.New(buf, index, begin)
 
 	LuaUnit.assertError(function ()
 		o:Get(count)
@@ -78,7 +79,7 @@ end
 
 local function TestGetSignify_WithNumber(a, index, begin, count, x)
 	local buf = Buffer.New(a)
-	local o = buf:GetReader(index, begin)
+	local o = BufferReader.New(buf, index, begin)
 
 	LuaUnit.assertEquals(o:GetSignify(count), x)
 end
@@ -102,7 +103,7 @@ end
 
 local function TestGetNillify_WithNumber(a, index, begin, count, x)
 	local buf = Buffer.New(a)
-	local o = buf:GetReader(index, begin)
+	local o = BufferReader.New(buf, index, begin)
 
 	LuaUnit.assertEquals(o:GetNillify(count), x)
 end
@@ -114,7 +115,7 @@ end
 
 local function TestGetBoolean_WithNumber(a, index, begin, count, x)
 	local buf = Buffer.New(a)
-	local o = buf:GetReader(index, begin)
+	local o = BufferReader.New(buf, index, begin)
 
 	LuaUnit.assertEquals(o:GetBoolean(count), x)
 end

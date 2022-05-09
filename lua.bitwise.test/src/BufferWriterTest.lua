@@ -1,12 +1,13 @@
 local LuaUnit = require("luaunit")
 
 local Buffer = require("Buffer")
+local BufferWriter = require("BufferWriter")
 
 local BufferWriterTest = {}
 
 local function TestNew_WithBuffer()
 	local buf = Buffer.New()
-	local o = buf:GetWriter()
+	local o = BufferWriter.New(buf)
 
 	LuaUnit.assertEquals(o:GetIndex(), 1)
 	LuaUnit.assertEquals(o:GetBegin(), 1)
@@ -18,7 +19,7 @@ end
 
 local function TestNew_WithBufferAndNumber(index)
 	local buf = Buffer.New()
-	local o = buf:GetWriter(index)
+	local o = BufferWriter.New(buf, index)
 
 	LuaUnit.assertEquals(o:GetIndex(), index)
 	LuaUnit.assertEquals(o:GetBegin(), 1)
@@ -31,7 +32,7 @@ end
 
 local function TestNew_WithBufferAndNumberAndNumber(index, begin)
 	local buf = Buffer.New()
-	local o = buf:GetWriter(index, begin)
+	local o = BufferWriter.New(buf, index, begin)
 
 	LuaUnit.assertEquals(o:GetIndex(), index)
 	LuaUnit.assertEquals(o:GetBegin(), begin)
@@ -46,7 +47,7 @@ end
 local function TestSet_WithNumberAndNumber(index, begin, count, value, x)
 	-- 45 28 21 e6 38 d0 13 77 be 54 66 cf 34 e9 0c 6c
 	local buf = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
-	local o = buf:GetWriter(index, begin)
+	local o = BufferWriter.New(buf, index, begin)
 
 	o:Set(count, value)
 	o:Set(count, value)
@@ -63,7 +64,7 @@ end
 
 local function TestSet_WithNumberAndNumber_WhereNotCanHas(a, index, begin, count, value)
 	local buf = Buffer.New(a)
-	local o = buf:GetWriter(index, begin)
+	local o = BufferWriter.New(buf, index, begin)
 
 	LuaUnit.assertError(function ()
 		o:Set(count, value)
@@ -81,7 +82,7 @@ end
 
 local function TestSet_WithNumberAndNumberAndBoolean(index, begin, count, value, x)
 	local buf = Buffer.New()
-	local o = buf:GetWriter(index, begin)
+	local o = BufferWriter.New(buf, index, begin)
 
 	o:Set(count, value, true)
 	o:Set(count, value, true)
@@ -98,7 +99,7 @@ end
 
 local function TestSetSignify_WithNumberAndNumber(index, begin, count, value, x)
 	local buf = Buffer.New()
-	local o = buf:GetWriter(index, begin)
+	local o = BufferWriter.New(buf, index, begin)
 
 	o:SetSignify(count, value, true)
 
@@ -124,7 +125,7 @@ end
 
 local function TestSetSignify_WithNumberAndNumber_WhereNotCanHas(index, begin, count, value)
 	local buf = Buffer.New()
-	local o = buf:GetWriter(index, begin)
+	local o = BufferWriter.New(buf, index, begin)
 
 	LuaUnit.assertError(function ()
 		o:SetSignify(count, value, true)
@@ -142,7 +143,7 @@ end
 
 local function TestSetNillify_WithNumberAndNumber(index, begin, count, value, x)
 	local buf = Buffer.New()
-	local o = buf:GetWriter(index, begin)
+	local o = BufferWriter.New(buf, index, begin)
 
 	o:SetNillify(count, value, true)
 
@@ -156,7 +157,7 @@ end
 
 local function TestSetBoolean_WithNumberAndNumber(index, begin, count, value, x)
 	local buf = Buffer.New()
-	local o = buf:GetWriter(index, begin)
+	local o = BufferWriter.New(buf, index, begin)
 
 	o:SetBoolean(count, value, true)
 
@@ -176,7 +177,7 @@ end
 
 local function TestReserve_WithNumber(a, index, begin, count, x)
 	local buf = Buffer.New(a)
-	local o = buf:GetWriter(index, begin)
+	local o = BufferWriter.New(buf, index, begin)
 
 	o:Reserve(count)
 
