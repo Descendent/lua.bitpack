@@ -26,107 +26,107 @@ function Buffer.New(str)
 	return self
 end
 
-function Buffer.Normalize(index, begin)
-	return index + ((begin - 1) // 8),
-		((begin - 1) % 8) + 1
+function Buffer.Normalize(octet, bitBegin)
+	return octet + ((bitBegin - 1) // 8),
+		((bitBegin - 1) % 8) + 1
 end
 
-function Buffer.Increment(index, begin, count)
-	return Buffer.Normalize(index, begin + count)
+function Buffer.Increment(octet, bitBegin, bitCount)
+	return Buffer.Normalize(octet, bitBegin + bitCount)
 end
 
-function Buffer:CanHas(index, begin, count)
-	if (begin == nil) and (count == nil) then
-		begin = 1
-		count = 8
+function Buffer:CanHas(octet, bitBegin, bitCount)
+	if (bitBegin == nil) and (bitCount == nil) then
+		bitBegin = 1
+		bitCount = 8
 	end
 
 	if Buffer.DEBUG then
-		assert(index >= 1)
-		assert(index == index << 0)
+		assert(octet >= 1)
+		assert(octet == octet << 0)
 
-		assert(begin >= 1)
-		assert(begin <= 8)
-		assert(begin == begin << 0)
+		assert(bitBegin >= 1)
+		assert(bitBegin <= 8)
+		assert(bitBegin == bitBegin << 0)
 
-		assert(count >= 1)
-		assert(count == count << 0)
+		assert(bitCount >= 1)
+		assert(bitCount == bitCount << 0)
 	end
 
-	return (Buffer.Increment(index, begin, count - 1) <= self._len)
+	return (Buffer.Increment(octet, bitBegin, bitCount - 1) <= self._len)
 end
 
-function Buffer:Get(index, begin, count)
-	if (begin == nil) and (count == nil) then
-		begin = 1
-		count = 8
+function Buffer:Get(octet, bitBegin, bitCount)
+	if (bitBegin == nil) and (bitCount == nil) then
+		bitBegin = 1
+		bitCount = 8
 	end
 
 	if Buffer.DEBUG then
-		assert(index >= 1)
+		assert(octet >= 1)
 
-		assert(begin >= 1)
-		assert(begin <= 8)
+		assert(bitBegin >= 1)
+		assert(bitBegin <= 8)
 
-		assert(count >= 1)
-		assert(count <= 32)
+		assert(bitCount >= 1)
+		assert(bitCount <= 32)
 	end
 
-	local i = ((index - 1) // 4) + 1
+	local i = ((octet - 1) // 4) + 1
 
-	local aBegin = (((index - 1) % 4) * 8) + begin
-	local aCount = math.min(count, 32 - (aBegin - 1))
-	local a = (self._bin[i] >> (aBegin - 1))
-		& ((1 << aCount) - 1)
+	local aBitBegin = (((octet - 1) % 4) * 8) + bitBegin
+	local aBitCount = math.min(bitCount, 32 - (aBitBegin - 1))
+	local a = (self._bin[i] >> (aBitBegin - 1))
+		& ((1 << aBitCount) - 1)
 
-	if aCount == count then
+	if aBitCount == bitCount then
 		return a
 	end
 
 	i = i + 1
 
-	local bCount = count - aCount
+	local bBitCount = bitCount - aBitCount
 	local b = self._bin[i]
-		& ((1 << bCount) - 1)
+		& ((1 << bBitCount) - 1)
 
-	return a | (b << aCount)
+	return a | (b << aBitCount)
 end
 
-function Buffer:Set(index, begin, count, value)
-	if (count == nil) and (value == nil) then
-		value = begin
-		begin = 1
-		count = 8
+function Buffer:Set(octet, bitBegin, bitCount, value)
+	if (bitCount == nil) and (value == nil) then
+		value = bitBegin
+		bitBegin = 1
+		bitCount = 8
 	end
 
 	if Buffer.DEBUG then
-		assert(index >= 1)
+		assert(octet >= 1)
 
-		assert(begin >= 1)
-		assert(begin <= 8)
+		assert(bitBegin >= 1)
+		assert(bitBegin <= 8)
 
-		assert(count >= 1)
-		assert(count <= 32)
+		assert(bitCount >= 1)
+		assert(bitCount <= 32)
 
-		assert(value == value & ((1 << count) - 1))
+		assert(value == value & ((1 << bitCount) - 1))
 	end
 
-	local i = ((index - 1) // 4) + 1
+	local i = ((octet - 1) // 4) + 1
 
-	local aBegin = (((index - 1) % 4) * 8) + begin
-	local aCount = math.min(count, 32 - (aBegin - 1))
-	self._bin[i] = (self._bin[i] & ~(((1 << aCount) - 1) << (aBegin - 1))) -- Clear
-		| ((value & ((1 << aCount) - 1)) << (aBegin - 1))
+	local aBitBegin = (((octet - 1) % 4) * 8) + bitBegin
+	local aBitCount = math.min(bitCount, 32 - (aBitBegin - 1))
+	self._bin[i] = (self._bin[i] & ~(((1 << aBitCount) - 1) << (aBitBegin - 1))) -- Clear
+		| ((value & ((1 << aBitCount) - 1)) << (aBitBegin - 1))
 
-	if aCount == count then
+	if aBitCount == bitCount then
 		return
 	end
 
 	i = i + 1
 
-	local bCount = count - aCount
-	self._bin[i] = (self._bin[i] & ~((1 << bCount) - 1)) -- Clear
-		| ((value >> aCount) & ((1 << bCount) - 1))
+	local bBitCount = bitCount - aBitCount
+	self._bin[i] = (self._bin[i] & ~((1 << bBitCount) - 1)) -- Clear
+		| ((value >> aBitCount) & ((1 << bBitCount) - 1))
 end
 
 local function Reserve_0(self)
@@ -135,8 +135,8 @@ local function Reserve_0(self)
 	self._bin = {}
 end
 
-local function Reserve_N(self, index, begin, count)
-	local n = ((index - 1) // 4) + 1
+local function Reserve_N(self, octet, bitBegin, bitCount)
+	local n = ((octet - 1) // 4) + 1
 
 	for i = self._n + 1, n do
 		self._bin[i] = 0
@@ -146,40 +146,40 @@ local function Reserve_N(self, index, begin, count)
 		self._bin[i] = nil
 	end
 
-	local aCount = (((index - 1) % 4) * 8) + count
-	self._bin[n] = self._bin[n] & ((1 << aCount) - 1)
+	local aBitCount = (((octet - 1) % 4) * 8) + bitCount
+	self._bin[n] = self._bin[n] & ((1 << aBitCount) - 1)
 
-	if index == self._len then
+	if octet == self._len then
 		return
 	end
 
-	self._len = index
+	self._len = octet
 	self._n = n
 	self._bin[0] = nil
 end
 
-function Buffer:Reserve(index, begin, count)
-	if (begin == nil) and (count == nil) then
-		begin = 1
-		count = 8
+function Buffer:Reserve(octet, bitBegin, bitCount)
+	if (bitBegin == nil) and (bitCount == nil) then
+		bitBegin = 1
+		bitCount = 8
 	end
 
 	if Buffer.DEBUG then
-		assert(index >= 0)
+		assert(octet >= 0)
 
-		assert(begin >= 1)
-		assert(begin <= 8)
+		assert(bitBegin >= 1)
+		assert(bitBegin <= 8)
 
-		assert(count >= 0)
+		assert(bitCount >= 0)
 	end
 
-	index, count = Buffer.Increment(index, begin, count - 1)
-	begin = 1
+	octet, bitCount = Buffer.Increment(octet, bitBegin, bitCount - 1)
+	bitBegin = 1
 
-	if index == 0 then
+	if octet == 0 then
 		Reserve_0(self)
 	else
-		Reserve_N(self, index, begin, count)
+		Reserve_N(self, octet, bitBegin, bitCount)
 	end
 end
 

@@ -17,11 +17,11 @@ function BufferWriterTest:TestNew_WithBuffer()
 	TestNew_WithBuffer()
 end
 
-local function TestNew_WithBufferAndNumber(index)
+local function TestNew_WithBufferAndNumber(octet)
 	local buf = Buffer.New()
-	local o = BufferWriter.New(buf, index)
+	local o = BufferWriter.New(buf, octet)
 
-	LuaUnit.assertEquals(o:GetIndex(), index)
+	LuaUnit.assertEquals(o:GetIndex(), octet)
 	LuaUnit.assertEquals(o:GetBegin(), 1)
 end
 
@@ -30,12 +30,12 @@ function BufferWriterTest:TestNew_WithBufferAndNumber()
 	TestNew_WithBufferAndNumber(8)
 end
 
-local function TestNew_WithBufferAndNumberAndNumber(index, begin)
+local function TestNew_WithBufferAndNumberAndNumber(octet, bitBegin)
 	local buf = Buffer.New()
-	local o = BufferWriter.New(buf, index, begin)
+	local o = BufferWriter.New(buf, octet, bitBegin)
 
-	LuaUnit.assertEquals(o:GetIndex(), index)
-	LuaUnit.assertEquals(o:GetBegin(), begin)
+	LuaUnit.assertEquals(o:GetIndex(), octet)
+	LuaUnit.assertEquals(o:GetBegin(), bitBegin)
 end
 
 function BufferWriterTest:TestNew_WithBufferAndNumberAndNumber()
@@ -44,13 +44,13 @@ function BufferWriterTest:TestNew_WithBufferAndNumberAndNumber()
 	TestNew_WithBufferAndNumberAndNumber(1, 8)
 end
 
-local function TestSet_WithNumberAndNumber(index, begin, count, value, x)
+local function TestSet_WithNumberAndNumber(octet, bitBegin, bitCount, value, x)
 	-- 45 28 21 e6 38 d0 13 77 be 54 66 cf 34 e9 0c 6c
 	local buf = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
-	local o = BufferWriter.New(buf, index, begin)
+	local o = BufferWriter.New(buf, octet, bitBegin)
 
-	o:Set(count, value)
-	o:Set(count, value)
+	o:Set(bitCount, value)
+	o:Set(bitCount, value)
 
 	LuaUnit.assertEquals(tostring(buf), x)
 end
@@ -62,13 +62,13 @@ function BufferWriterTest:TestSet_WithNumberAndNumber()
 	TestSet_WithNumberAndNumber(1, 1, 32, 0xaaaaaaaa, "\170\170\170\170\170\170\170\170\190\084\102\207\052\233\012\108")
 end
 
-local function TestSet_WithNumberAndNumber_WhereNotCanHas(a, index, begin, count, value)
+local function TestSet_WithNumberAndNumber_WhereNotCanHas(a, octet, bitBegin, bitCount, value)
 	local buf = Buffer.New(a)
-	local o = BufferWriter.New(buf, index, begin)
+	local o = BufferWriter.New(buf, octet, bitBegin)
 
 	LuaUnit.assertError(function ()
-		o:Set(count, value)
-		o:Set(count, value)
+		o:Set(bitCount, value)
+		o:Set(bitCount, value)
 	end)
 end
 
@@ -80,12 +80,12 @@ function BufferWriterTest:TestSet_WithNumberAndNumber_WhereNotCanHas()
 	TestSet_WithNumberAndNumber_WhereNotCanHas("\000\000\000\000\000\000\000\000", 7, 2, 8, 0x0)
 end
 
-local function TestSet_WithNumberAndNumberAndBoolean(index, begin, count, value, x)
+local function TestSet_WithNumberAndNumberAndBoolean(octet, bitBegin, bitCount, value, x)
 	local buf = Buffer.New()
-	local o = BufferWriter.New(buf, index, begin)
+	local o = BufferWriter.New(buf, octet, bitBegin)
 
-	o:Set(count, value, true)
-	o:Set(count, value, true)
+	o:Set(bitCount, value, true)
+	o:Set(bitCount, value, true)
 
 	LuaUnit.assertEquals(tostring(buf), x)
 end
@@ -97,11 +97,11 @@ function BufferWriterTest:TestSet_WithNumberAndNumberAndBoolean()
 	TestSet_WithNumberAndNumberAndBoolean(1, 1, 32, 0xaaaaaaaa, "\170\170\170\170\170\170\170\170")
 end
 
-local function TestSetSignify_WithNumberAndNumber(index, begin, count, value, x)
+local function TestSetSignify_WithNumberAndNumber(octet, bitBegin, bitCount, value, x)
 	local buf = Buffer.New()
-	local o = BufferWriter.New(buf, index, begin)
+	local o = BufferWriter.New(buf, octet, bitBegin)
 
-	o:SetSignify(count, value, true)
+	o:SetSignify(bitCount, value, true)
 
 	LuaUnit.assertEquals(tostring(buf), x)
 end
@@ -123,12 +123,12 @@ function BufferWriterTest:TestSetSignify_WithNumberAndNumber()
 	TestSetSignify_WithNumberAndNumber(1, 8, 1, -1, "\000")
 end
 
-local function TestSetSignify_WithNumberAndNumber_WhereNotCanHas(index, begin, count, value)
+local function TestSetSignify_WithNumberAndNumber_WhereNotCanHas(octet, bitBegin, bitCount, value)
 	local buf = Buffer.New()
-	local o = BufferWriter.New(buf, index, begin)
+	local o = BufferWriter.New(buf, octet, bitBegin)
 
 	LuaUnit.assertError(function ()
-		o:SetSignify(count, value, true)
+		o:SetSignify(bitCount, value, true)
 	end)
 end
 
@@ -141,11 +141,11 @@ function BufferWriterTest:TestSetSignify_WithNumberAndNumber_WhereNotCanHas()
 	TestSetSignify_WithNumberAndNumber_WhereNotCanHas(1, 5, 1, 1)
 end
 
-local function TestSetNillify_WithNumberAndNumber(index, begin, count, value, x)
+local function TestSetNillify_WithNumberAndNumber(octet, bitBegin, bitCount, value, x)
 	local buf = Buffer.New()
-	local o = BufferWriter.New(buf, index, begin)
+	local o = BufferWriter.New(buf, octet, bitBegin)
 
-	o:SetNillify(count, value, true)
+	o:SetNillify(bitCount, value, true)
 
 	LuaUnit.assertEquals(tostring(buf), x)
 end
@@ -155,11 +155,11 @@ function BufferWriterTest:TestSetNillify_WithNumberAndNumber()
 	TestSetNillify_WithNumberAndNumber(1, 1, 8, 255, "\255")
 end
 
-local function TestSetBoolean_WithNumberAndNumber(index, begin, count, value, x)
+local function TestSetBoolean_WithNumberAndNumber(octet, bitBegin, bitCount, value, x)
 	local buf = Buffer.New()
-	local o = BufferWriter.New(buf, index, begin)
+	local o = BufferWriter.New(buf, octet, bitBegin)
 
-	o:SetBoolean(count, value, true)
+	o:SetBoolean(bitCount, value, true)
 
 	LuaUnit.assertEquals(tostring(buf), x)
 end
@@ -175,11 +175,11 @@ function BufferWriterTest:TestSetBoolean_WithNumberAndNumber()
 	TestSetBoolean_WithNumberAndNumber(1, 1, 8, true, "\001")
 end
 
-local function TestReserve_WithNumber(a, index, begin, count, x)
+local function TestReserve_WithNumber(a, octet, bitBegin, bitCount, x)
 	local buf = Buffer.New(a)
-	local o = BufferWriter.New(buf, index, begin)
+	local o = BufferWriter.New(buf, octet, bitBegin)
 
-	o:Reserve(count)
+	o:Reserve(bitCount)
 
 	LuaUnit.assertEquals(tostring(buf), x)
 end

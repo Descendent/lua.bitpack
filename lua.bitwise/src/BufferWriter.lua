@@ -1,66 +1,66 @@
 local BufferWriter = {}
 BufferWriter.__index = BufferWriter
 
-function BufferWriter.New(buf, index, begin)
-	if index == nil then
-		index = 1
+function BufferWriter.New(buf, octet, bitBegin)
+	if octet == nil then
+		octet = 1
 	end
 
-	if begin == nil then
-		begin = 1
+	if bitBegin == nil then
+		bitBegin = 1
 	end
 
 	local self = setmetatable({}, BufferWriter)
 
 	self._buf = buf
-	self._index = index
-	self._begin = begin
+	self._octet = octet
+	self._bitBegin = bitBegin
 
 	return self
 end
 
 function BufferWriter:GetIndex()
-	return self._index
+	return self._octet
 end
 
 function BufferWriter:SetIndex(value)
-	self._index = value
+	self._octet = value
 end
 
 function BufferWriter:GetBegin()
-	return self._begin
+	return self._bitBegin
 end
 
 function BufferWriter:SetBegin(value)
-	self._begin = value
+	self._bitBegin = value
 end
 
-function BufferWriter:CanHas(count)
-	return self._buf:CanHas(self._index, self._begin, count)
+function BufferWriter:CanHas(bitCount)
+	return self._buf:CanHas(self._octet, self._bitBegin, bitCount)
 end
 
-function BufferWriter:Set(count, value, reserve)
+function BufferWriter:Set(bitCount, value, reserve)
 	if reserve then
-		self:Reserve(count)
+		self:Reserve(bitCount)
 	end
 
-	self._buf:Set(self._index, self._begin, count, value)
-	self._index, self._begin = self._buf.Increment(self._index, self._begin, count)
+	self._buf:Set(self._octet, self._bitBegin, bitCount, value)
+	self._octet, self._bitBegin = self._buf.Increment(self._octet, self._bitBegin, bitCount)
 end
 
-function BufferWriter:SetSignify(count, value, reserve)
-	self:Set(count, value + (1 << (count - 1)), reserve)
+function BufferWriter:SetSignify(bitCount, value, reserve)
+	self:Set(bitCount, value + (1 << (bitCount - 1)), reserve)
 end
 
-function BufferWriter:SetNillify(count, value, reserve)
+function BufferWriter:SetNillify(bitCount, value, reserve)
 	if value == nil then
 		value = 0
 	end
 
-	self:Set(count, value, reserve)
+	self:Set(bitCount, value, reserve)
 end
 
-function BufferWriter:SetBoolean(count, value, reserve)
+function BufferWriter:SetBoolean(bitCount, value, reserve)
 	if value == 0 then
 		--
 	elseif not value then
@@ -69,11 +69,11 @@ function BufferWriter:SetBoolean(count, value, reserve)
 		value = 1
 	end
 
-	self:Set(count, value, reserve)
+	self:Set(bitCount, value, reserve)
 end
 
-function BufferWriter:Reserve(count)
-	self._buf:Reserve(self._index, self._begin, count)
+function BufferWriter:Reserve(bitCount)
+	self._buf:Reserve(self._octet, self._bitBegin, bitCount)
 end
 
 return BufferWriter

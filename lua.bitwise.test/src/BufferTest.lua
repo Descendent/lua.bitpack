@@ -38,8 +38,8 @@ function BufferTest:TestNew_WithString()
 	TestNew_WithString(string.rep("\255", 16 * 1024))
 end
 
-local function TestNormalize(index, begin, x, y)
-	local o, p = Buffer.Normalize(index, begin)
+local function TestNormalize(octet, bitBegin, x, y)
+	local o, p = Buffer.Normalize(octet, bitBegin)
 
 	LuaUnit.assertEquals(o, x)
 	LuaUnit.assertEquals(p, y)
@@ -51,8 +51,8 @@ function BufferTest:TestNormalize()
 	TestNormalize(1, 17, 3, 1)
 end
 
-local function TestIncrement(index, begin, count, x, y)
-	local o, p = Buffer.Increment(index, begin, count)
+local function TestIncrement(octet, bitBegin, bitCount, x, y)
+	local o, p = Buffer.Increment(octet, bitBegin, bitCount)
 
 	LuaUnit.assertEquals(o, x)
 	LuaUnit.assertEquals(p, y)
@@ -69,10 +69,10 @@ function BufferTest:TestIncrement()
 	TestIncrement(3, 1, -16, 1, 1)
 end
 
-local function TestCanHas_WithNumber(a, index, x)
+local function TestCanHas_WithNumber(a, octet, x)
 	local o = Buffer.New(a)
 
-	LuaUnit.assertEquals(o:CanHas(index), x)
+	LuaUnit.assertEquals(o:CanHas(octet), x)
 end
 
 function BufferTest:TestCanHas_WithNumber()
@@ -81,11 +81,11 @@ function BufferTest:TestCanHas_WithNumber()
 	TestCanHas_WithNumber("\000\000\000\000\000\000\000\000", 9, false)
 end
 
-local function TestCanHas_WithNumber_WhereNotValid(index)
+local function TestCanHas_WithNumber_WhereNotValid(octet)
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
-		o:CanHas(index)
+		o:CanHas(octet)
 	end)
 end
 
@@ -94,10 +94,10 @@ function BufferTest:TestCanHas_WithNumber_WhereNotValid()
 	TestCanHas_WithNumber_WhereNotValid(1.1)
 end
 
-local function TestCanHas_WithNumberAndNumberAndNumber(a, index, begin, count, x)
+local function TestCanHas_WithNumberAndNumberAndNumber(a, octet, bitBegin, bitCount, x)
 	local o = Buffer.New(a)
 
-	LuaUnit.assertEquals(o:CanHas(index, begin, count), x)
+	LuaUnit.assertEquals(o:CanHas(octet, bitBegin, bitCount), x)
 end
 
 function BufferTest:TestCanHas_WithNumberAndNumberAndNumber()
@@ -109,11 +109,11 @@ function BufferTest:TestCanHas_WithNumberAndNumberAndNumber()
 	TestCanHas_WithNumberAndNumberAndNumber("\000\000\000\000\000\000\000\000\000", 1, 1, 65, true)
 end
 
-local function TestCanHas_WithNumberAndNumberAndNumber_WhereNotValid(index, begin, count)
+local function TestCanHas_WithNumberAndNumberAndNumber_WhereNotValid(octet, bitBegin, bitCount)
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
-		o:CanHas(index, begin, count)
+		o:CanHas(octet, bitBegin, bitCount)
 	end)
 end
 
@@ -127,11 +127,11 @@ function BufferTest:TestCanHas_WithNumberAndNumberAndNumber_WhereNotValid()
 	TestCanHas_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 1.1)
 end
 
-local function TestGet_WithNumber(index, x)
+local function TestGet_WithNumber(octet, x)
 	-- 45 28 21 e6 38 d0 13 77 be 54 66 cf 34 e9 0c 6c
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
-	LuaUnit.assertEquals(o:Get(index), x)
+	LuaUnit.assertEquals(o:Get(octet), x)
 end
 
 function BufferTest:TestGet_WithNumber()
@@ -140,11 +140,11 @@ function BufferTest:TestGet_WithNumber()
 	TestGet_WithNumber(9, 0xbe)
 end
 
-local function TestGet_WithNumber_WhereNotValid(index)
+local function TestGet_WithNumber_WhereNotValid(octet)
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
-		o:Get(index)
+		o:Get(octet)
 	end)
 end
 
@@ -154,11 +154,11 @@ function BufferTest:TestGet_WithNumber_WhereNotValid()
 	TestGet_WithNumber_WhereNotValid(1.1)
 end
 
-local function TestGet_WithNumberAndNumberAndNumber(index, begin, count, x)
+local function TestGet_WithNumberAndNumberAndNumber(octet, bitBegin, bitCount, x)
 	-- 45 28 21 e6 38 d0 13 77 be 54 66 cf 34 e9 0c 6c
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
-	LuaUnit.assertEquals(o:Get(index, begin, count), x)
+	LuaUnit.assertEquals(o:Get(octet, bitBegin, bitCount), x)
 end
 
 function BufferTest:TestGet_WithNumberAndNumberAndNumber()
@@ -167,11 +167,11 @@ function BufferTest:TestGet_WithNumberAndNumberAndNumber()
 	TestGet_WithNumberAndNumberAndNumber(1, 1, 32, 0xe6212845)
 end
 
-local function TestGet_WithNumberAndNumberAndNumber_WhereNotValid(index, begin, count)
+local function TestGet_WithNumberAndNumberAndNumber_WhereNotValid(octet, bitBegin, bitCount)
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
-		o:Get(index, begin, count)
+		o:Get(octet, bitBegin, bitCount)
 	end)
 end
 
@@ -187,11 +187,11 @@ function BufferTest:TestGet_WithNumberAndNumberAndNumber_WhereNotValid()
 	TestGet_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 1.1)
 end
 
-local function TestSet_WithNumberAndNumber(index, value, x)
+local function TestSet_WithNumberAndNumber(octet, value, x)
 	-- 45 28 21 e6 38 d0 13 77 be 54 66 cf 34 e9 0c 6c
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
-	o:Set(index, value)
+	o:Set(octet, value)
 
 	LuaUnit.assertEquals(tostring(o), x)
 end
@@ -202,11 +202,11 @@ function BufferTest:TestSet_WithNumberAndNumber()
 	TestSet_WithNumberAndNumber(9, 0xaa, "\069\040\033\230\056\208\019\119\170\084\102\207\052\233\012\108")
 end
 
-local function TestSet_WithNumberAndNumber_WhereNotValid(index, value)
+local function TestSet_WithNumberAndNumber_WhereNotValid(octet, value)
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
-		o:Set(index, value)
+		o:Set(octet, value)
 	end)
 end
 
@@ -217,11 +217,11 @@ function BufferTest:TestSet_WithNumberAndNumber_WhereNotValid()
 	TestSet_WithNumberAndNumber_WhereNotValid(1, 0x1ff)
 end
 
-local function TestSet_WithNumberAndNumberAndNumberAndNumber(index, begin, count, value, x)
+local function TestSet_WithNumberAndNumberAndNumberAndNumber(octet, bitBegin, bitCount, value, x)
 	-- 45 28 21 e6 38 d0 13 77 be 54 66 cf 34 e9 0c 6c
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
-	o:Set(index, begin, count, value)
+	o:Set(octet, bitBegin, bitCount, value)
 
 	LuaUnit.assertEquals(tostring(o), x)
 end
@@ -233,11 +233,11 @@ function BufferTest:TestSet_WithNumberAndNumberAndNumberAndNumber()
 	TestSet_WithNumberAndNumberAndNumberAndNumber(1, 1, 32, 0xaaaaaaaa, "\170\170\170\170\056\208\019\119\190\084\102\207\052\233\012\108")
 end
 
-local function TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(index, begin, count, value)
+local function TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(octet, bitBegin, bitCount, value)
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
-		o:Set(index, begin, count, value)
+		o:Set(octet, bitBegin, bitCount, value)
 	end)
 end
 
@@ -254,10 +254,10 @@ function BufferTest:TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(
 	TestSet_WithNumberAndNumberAndNumberAndNumber_WhereNotValid(1, 1, 8, 0x1ff)
 end
 
-local function TestReserve_WithNumber(a, index, x)
+local function TestReserve_WithNumber(a, octet, x)
 	local o = Buffer.New(a)
 
-	o:Reserve(index)
+	o:Reserve(octet)
 
 	LuaUnit.assertEquals(tostring(o), x)
 end
@@ -274,11 +274,11 @@ function BufferTest:TestReserve_WithNumber()
 	TestReserve_WithNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 17, "\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108\000")
 end
 
-local function TestReserve_WithNumber_WhereNotValid(index)
+local function TestReserve_WithNumber_WhereNotValid(octet)
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
-		o:Reserve(index)
+		o:Reserve(octet)
 	end)
 end
 
@@ -287,10 +287,10 @@ function BufferTest:TestReserve_WithNumber_WhereNotValid()
 	TestReserve_WithNumber_WhereNotValid(1.1)
 end
 
-local function TestReserve_WithNumberAndNumberAndNumber(a, index, begin, count, x)
+local function TestReserve_WithNumberAndNumberAndNumber(a, octet, bitBegin, bitCount, x)
 	local o = Buffer.New(a)
 
-	o:Reserve(index, begin, count)
+	o:Reserve(octet, bitBegin, bitCount)
 
 	LuaUnit.assertEquals(tostring(o), x)
 end
@@ -311,11 +311,11 @@ function BufferTest:TestReserve_WithNumberAndNumberAndNumber()
 	TestReserve_WithNumberAndNumberAndNumber("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108", 1, 1, 72, "\069\040\033\230\056\208\019\119\190")
 end
 
-local function TestReserve_WithNumberAndNumberAndNumber_WhereNotValid(index, begin, count)
+local function TestReserve_WithNumberAndNumberAndNumber_WhereNotValid(octet, bitBegin, bitCount)
 	local o = Buffer.New("\069\040\033\230\056\208\019\119\190\084\102\207\052\233\012\108")
 
 	LuaUnit.assertError(function ()
-		o:Reserve(index, begin, count)
+		o:Reserve(octet, bitBegin, bitCount)
 	end)
 end
 
@@ -328,12 +328,12 @@ function BufferTest:TestReserve_WithNumberAndNumberAndNumber_WhereNotValid()
 	TestReserve_WithNumberAndNumberAndNumber_WhereNotValid(1, 1, 1.1)
 end
 
-local function TestMetamethodLen(a, index)
+local function TestMetamethodLen(a, octet)
 	local o = Buffer.New(a)
 
-	o:Reserve(index)
+	o:Reserve(octet)
 
-	LuaUnit.assertEquals(#o, index)
+	LuaUnit.assertEquals(#o, octet)
 	LuaUnit.assertEquals(#o, #tostring(o))
 end
 
