@@ -11,12 +11,12 @@
 			},
 			"type": "process",
 			"command": "lua",
-			"args": ["lua.bitwise.test/init.lua"],
+			"args": ["lua.bitpack.test/init.lua"],
 			"options":
 			{
 				"env":
 				{
-					"LUA_PATH": "./lua.bitwise/src/?.lua;./lua.bitwise.test/src/?.lua;./submodules/luaunit/?.lua;${env:LUA_PATH};"
+					"LUA_PATH": "./lua.bitpack/src/?.lua;./lua.bitpack.test/src/?.lua;./submodules/luaunit/?.lua;${env:LUA_PATH};"
 				}
 			}
 		}
