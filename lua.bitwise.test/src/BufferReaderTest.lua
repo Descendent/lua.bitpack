@@ -9,8 +9,8 @@ local function TestNew_WithBuffer()
 	local buf = Buffer.New()
 	local o = BufferReader.New(buf)
 
-	LuaUnit.assertEquals(o:GetIndex(), 1)
-	LuaUnit.assertEquals(o:GetBegin(), 1)
+	LuaUnit.assertEquals(o:GetOctet(), 1)
+	LuaUnit.assertEquals(o:GetBitBegin(), 1)
 end
 
 function BufferReaderTest:TestNew_WithBuffer()
@@ -21,8 +21,8 @@ local function TestNew_WithBufferAndNumber(octet)
 	local buf = Buffer.New()
 	local o = BufferReader.New(buf, octet)
 
-	LuaUnit.assertEquals(o:GetIndex(), octet)
-	LuaUnit.assertEquals(o:GetBegin(), 1)
+	LuaUnit.assertEquals(o:GetOctet(), octet)
+	LuaUnit.assertEquals(o:GetBitBegin(), 1)
 end
 
 function BufferReaderTest:TestNew_WithBufferAndNumber()
@@ -34,8 +34,8 @@ local function TestNew_WithBufferAndNumberAndNumber(octet, bitBegin)
 	local buf = Buffer.New()
 	local o = BufferReader.New(buf, octet, bitBegin)
 
-	LuaUnit.assertEquals(o:GetIndex(), octet)
-	LuaUnit.assertEquals(o:GetBegin(), bitBegin)
+	LuaUnit.assertEquals(o:GetOctet(), octet)
+	LuaUnit.assertEquals(o:GetBitBegin(), bitBegin)
 end
 
 function BufferReaderTest:TestNew_WithBufferAndNumberAndNumber()

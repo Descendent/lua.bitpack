@@ -19,19 +19,19 @@ function BufferWriter.New(buf, octet, bitBegin)
 	return self
 end
 
-function BufferWriter:GetIndex()
+function BufferWriter:GetOctet()
 	return self._octet
 end
 
-function BufferWriter:SetIndex(value)
+function BufferWriter:SetOctet(value)
 	self._octet = value
 end
 
-function BufferWriter:GetBegin()
+function BufferWriter:GetBitBegin()
 	return self._bitBegin
 end
 
-function BufferWriter:SetBegin(value)
+function BufferWriter:SetBitBegin(value)
 	self._bitBegin = value
 end
 

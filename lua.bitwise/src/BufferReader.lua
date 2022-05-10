@@ -19,19 +19,19 @@ function BufferReader.New(buf, octet, bitBegin)
 	return self
 end
 
-function BufferReader:GetIndex()
+function BufferReader:GetOctet()
 	return self._octet
 end
 
-function BufferReader:SetIndex(value)
+function BufferReader:SetOctet(value)
 	self._octet = value
 end
 
-function BufferReader:GetBegin()
+function BufferReader:GetBitBegin()
 	return self._bitBegin
 end
 
-function BufferReader:SetBegin(value)
+function BufferReader:SetBitBegin(value)
 	self._bitBegin = value
 end
 
