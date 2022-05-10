@@ -113,18 +113,18 @@ function BufferReaderTest:TestGetNillify_WithNumber()
 	TestGetNillify_WithNumber("\255", 1, 1, 8, 255)
 end
 
-local function TestGetBoolean_WithNumber(a, octet, bitBegin, bitCount, x)
+local function TestGetBoolify_WithNumber(a, octet, bitBegin, bitCount, x)
 	local buf = Buffer.New(a)
 	local o = BufferReader.New(buf, octet, bitBegin)
 
-	LuaUnit.assertEquals(o:GetBoolean(bitCount), x)
+	LuaUnit.assertEquals(o:GetBoolify(bitCount), x)
 end
 
-function BufferReaderTest:TestGetBoolean_WithNumber()
-	TestGetBoolean_WithNumber("\000", 1, 1, 1, false)
-	TestGetBoolean_WithNumber("\001", 1, 1, 1, true)
-	TestGetBoolean_WithNumber("\000", 1, 1, 8, false)
-	TestGetBoolean_WithNumber("\255", 1, 1, 8, true)
+function BufferReaderTest:TestGetBoolify_WithNumber()
+	TestGetBoolify_WithNumber("\000", 1, 1, 1, false)
+	TestGetBoolify_WithNumber("\001", 1, 1, 1, true)
+	TestGetBoolify_WithNumber("\000", 1, 1, 8, false)
+	TestGetBoolify_WithNumber("\255", 1, 1, 8, true)
 end
 
 return BufferReaderTest

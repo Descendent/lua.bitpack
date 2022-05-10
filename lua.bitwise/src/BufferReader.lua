@@ -60,7 +60,7 @@ function BufferReader:GetNillify(bitCount)
 	return value
 end
 
-function BufferReader:GetBoolean(bitCount)
+function BufferReader:GetBoolify(bitCount)
 	return (self:Get(bitCount) ~= 0)
 end
 

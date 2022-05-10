@@ -60,7 +60,7 @@ function BufferWriter:SetNillify(bitCount, value, reserve)
 	self:Set(bitCount, value, reserve)
 end
 
-function BufferWriter:SetBoolean(bitCount, value, reserve)
+function BufferWriter:SetBoolify(bitCount, value, reserve)
 	if value == 0 then
 		--
 	elseif not value then

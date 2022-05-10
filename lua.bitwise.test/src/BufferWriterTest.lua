@@ -155,24 +155,24 @@ function BufferWriterTest:TestSetNillify_WithNumberAndNumber()
 	TestSetNillify_WithNumberAndNumber(1, 1, 8, 255, "\255")
 end
 
-local function TestSetBoolean_WithNumberAndNumber(octet, bitBegin, bitCount, value, x)
+local function TestSetBoolify_WithNumberAndNumber(octet, bitBegin, bitCount, value, x)
 	local buf = Buffer.New()
 	local o = BufferWriter.New(buf, octet, bitBegin)
 
-	o:SetBoolean(bitCount, value, true)
+	o:SetBoolify(bitCount, value, true)
 
 	LuaUnit.assertEquals(tostring(buf), x)
 end
 
-function BufferWriterTest:TestSetBoolean_WithNumberAndNumber()
-	TestSetBoolean_WithNumberAndNumber(1, 1, 1, false, "\000")
-	TestSetBoolean_WithNumberAndNumber(1, 1, 1, true, "\001")
-	TestSetBoolean_WithNumberAndNumber(1, 1, 1, nil, "\000")
-	TestSetBoolean_WithNumberAndNumber(1, 1, 1, 0, "\000")
-	TestSetBoolean_WithNumberAndNumber(1, 1, 1, -1, "\001")
-	TestSetBoolean_WithNumberAndNumber(1, 1, 1, "", "\001")
-	TestSetBoolean_WithNumberAndNumber(1, 1, 8, false, "\000")
-	TestSetBoolean_WithNumberAndNumber(1, 1, 8, true, "\001")
+function BufferWriterTest:TestSetBoolify_WithNumberAndNumber()
+	TestSetBoolify_WithNumberAndNumber(1, 1, 1, false, "\000")
+	TestSetBoolify_WithNumberAndNumber(1, 1, 1, true, "\001")
+	TestSetBoolify_WithNumberAndNumber(1, 1, 1, nil, "\000")
+	TestSetBoolify_WithNumberAndNumber(1, 1, 1, 0, "\000")
+	TestSetBoolify_WithNumberAndNumber(1, 1, 1, -1, "\001")
+	TestSetBoolify_WithNumberAndNumber(1, 1, 1, "", "\001")
+	TestSetBoolify_WithNumberAndNumber(1, 1, 8, false, "\000")
+	TestSetBoolify_WithNumberAndNumber(1, 1, 8, true, "\001")
 end
 
 local function TestReserve_WithNumber(a, octet, bitBegin, bitCount, x)
