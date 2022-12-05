@@ -1,7 +1,7 @@
 local Buffer = {}
 Buffer.__index = Buffer
 
-Buffer.DEBUG = true
+local _debug = true
 
 local function GetFormatter(self)
 	-- Format-string for `string.pack` and `string.unpack`
@@ -26,6 +26,10 @@ function Buffer.New(str)
 	return self
 end
 
+function Buffer.ConfigureDebug(value)
+	_debug = value
+end
+
 function Buffer.Normalize(octet, bitBegin)
 	return octet + ((bitBegin - 1) // 8),
 		((bitBegin - 1) % 8) + 1
@@ -41,7 +45,7 @@ function Buffer:CanHas(octet, bitBegin, bitCount)
 		bitCount = 8
 	end
 
-	if Buffer.DEBUG then
+	if _debug then
 		assert(octet >= 1)
 		assert(octet == octet << 0)
 
@@ -62,7 +66,7 @@ function Buffer:Get(octet, bitBegin, bitCount)
 		bitCount = 8
 	end
 
-	if Buffer.DEBUG then
+	if _debug then
 		assert(octet >= 1)
 
 		assert(bitBegin >= 1)
@@ -99,7 +103,7 @@ function Buffer:Set(octet, bitBegin, bitCount, value)
 		bitCount = 8
 	end
 
-	if Buffer.DEBUG then
+	if _debug then
 		assert(octet >= 1)
 
 		assert(bitBegin >= 1)
@@ -164,7 +168,7 @@ function Buffer:Reserve(octet, bitBegin, bitCount)
 		bitCount = 8
 	end
 
-	if Buffer.DEBUG then
+	if _debug then
 		assert(octet >= 0)
 
 		assert(bitBegin >= 1)
