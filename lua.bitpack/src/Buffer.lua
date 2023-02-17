@@ -74,6 +74,8 @@ function Buffer:Get(octet, bitBegin, bitCount)
 
 		assert(bitCount >= 1)
 		assert(bitCount <= 32)
+
+		assert(Buffer.Increment(octet, bitBegin, bitCount - 1) <= self._len)
 	end
 
 	local i = ((octet - 1) // 4) + 1
@@ -111,6 +113,8 @@ function Buffer:Set(octet, bitBegin, bitCount, value)
 
 		assert(bitCount >= 1)
 		assert(bitCount <= 32)
+
+		assert(Buffer.Increment(octet, bitBegin, bitCount - 1) <= self._len)
 
 		assert(value == value & ((1 << bitCount) - 1))
 	end
