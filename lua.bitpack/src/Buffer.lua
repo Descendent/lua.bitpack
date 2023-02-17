@@ -3,6 +3,19 @@ Buffer.__index = Buffer
 
 local _debug = true
 
+function Buffer.ConfigureDebug(value)
+	_debug = value
+end
+
+function Buffer.Normalize(octet, bitBegin)
+	return octet + ((bitBegin - 1) // 8),
+		((bitBegin - 1) % 8) + 1
+end
+
+function Buffer.Increment(octet, bitBegin, bitCount)
+	return Buffer.Normalize(octet, bitBegin + bitCount)
+end
+
 local function GetFormatter(self)
 	-- Format-string for `string.pack` and `string.unpack`
 	-- https://www.lua.org/manual/5.3/manual.html#6.4.2
@@ -24,19 +37,6 @@ function Buffer.New(str)
 	table.remove(self._bin)
 
 	return self
-end
-
-function Buffer.ConfigureDebug(value)
-	_debug = value
-end
-
-function Buffer.Normalize(octet, bitBegin)
-	return octet + ((bitBegin - 1) // 8),
-		((bitBegin - 1) % 8) + 1
-end
-
-function Buffer.Increment(octet, bitBegin, bitCount)
-	return Buffer.Normalize(octet, bitBegin + bitCount)
 end
 
 function Buffer:CanHas(octet, bitBegin, bitCount)
