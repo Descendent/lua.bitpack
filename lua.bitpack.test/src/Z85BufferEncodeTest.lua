@@ -5,19 +5,6 @@ local Z85BufferEncode = require("Z85BufferEncode")
 
 local Z85BufferEncodeTest = {}
 
-local function TestNew_WithBufferAndString_WhereNotValid(a, b)
-	local buf = Buffer.New(a)
-	local o
-
-	LuaUnit.assertError(function ()
-		o = Z85BufferDecode.New(buf, b)
-	end)
-end
-
-function Z85BufferEncodeTest:TestNew_WithBufferAndString_WhereNotValid()
-	TestNew_WithBufferAndString_WhereNotValid(nil, {"\x00"})
-end
-
 local function TestGetRemaining(a, count, x)
 	local buf = Buffer.New(a)
 	local o = Z85BufferEncode.New(buf)

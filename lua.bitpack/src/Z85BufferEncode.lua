@@ -21,8 +21,6 @@ function Z85BufferEncode.New(buf, str)
 		str = {}
 	end
 
-	assert(next(str) == nil)
-
 	local self = setmetatable({}, Z85BufferEncode)
 
 	self._buf = buf
