@@ -13,26 +13,17 @@ function BufferReader.New(buf, octet, bitBegin)
 	local self = setmetatable({}, BufferReader)
 
 	self._buf = buf
-	self._octet = octet
-	self._bitBegin = bitBegin
+	self._octet, self._bitBegin = self._buf.Normalize(octet, bitBegin)
 
 	return self
 end
 
-function BufferReader:GetOctet()
-	return self._octet
+function BufferReader:GetCurrent()
+	return self._octet, self._bitBegin
 end
 
-function BufferReader:SetOctet(value)
-	self._octet = value
-end
-
-function BufferReader:GetBitBegin()
-	return self._bitBegin
-end
-
-function BufferReader:SetBitBegin(value)
-	self._bitBegin = value
+function BufferReader:SetCurrent(octet, bitBegin)
+	self._octet, self._bitBegin = self._buf.Normalize(octet, bitBegin)
 end
 
 function BufferReader:CanHas(bitCount)

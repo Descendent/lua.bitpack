@@ -13,26 +13,17 @@ function BufferWriter.New(buf, octet, bitBegin)
 	local self = setmetatable({}, BufferWriter)
 
 	self._buf = buf
-	self._octet = octet
-	self._bitBegin = bitBegin
+	self._octet, self._bitBegin = self._buf.Normalize(octet, bitBegin)
 
 	return self
 end
 
-function BufferWriter:GetOctet()
-	return self._octet
+function BufferWriter:GetCurrent()
+	return self._octet, self._bitBegin
 end
 
-function BufferWriter:SetOctet(value)
-	self._octet = value
-end
-
-function BufferWriter:GetBitBegin()
-	return self._bitBegin
-end
-
-function BufferWriter:SetBitBegin(value)
-	self._bitBegin = value
+function BufferWriter:SetCurrent(octet, bitBegin)
+	self._octet, self._bitBegin = self._buf.Normalize(octet, bitBegin)
 end
 
 function BufferWriter:CanHas(bitCount)
