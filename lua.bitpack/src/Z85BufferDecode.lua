@@ -90,7 +90,9 @@ function Z85BufferDecode:Process(count)
 		binIndex = binIndex + 1
 	end
 
-	if len % 5 == 4 then
+	local rem = len % 5
+
+	if rem == 4 then
 		a1, a2, a3, a4 = string_unpack(">BBBB", str, strIndex)
 
 		a = DECODE[a1 - 31] * 52200625
@@ -105,7 +107,7 @@ function Z85BufferDecode:Process(count)
 
 		strIndex = strIndex + 4
 		binIndex = binIndex + 1
-	elseif len % 5 == 3 then
+	elseif rem == 3 then
 		a1, a2, a3 = string_unpack(">BBB", str, strIndex)
 
 		a = DECODE[a1 - 31] * 52200625
@@ -120,7 +122,7 @@ function Z85BufferDecode:Process(count)
 
 		strIndex = strIndex + 3
 		binIndex = binIndex + 1
-	elseif len % 5 == 2 then
+	elseif rem == 2 then
 		a1, a2 = string_unpack(">BB", str, strIndex)
 
 		a = DECODE[a1 - 31] * 52200625
