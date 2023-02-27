@@ -1,3 +1,31 @@
+local function Quote(value)
+	local t = type(value)
+
+	if t == "string" then
+		return string.format("%q", value)
+	end
+
+	if t == "table" then
+		return string.format("[%s]", value)
+	end
+
+	if t == "function" then
+		return string.format("[%s]", value)
+	end
+
+	if t == "thread" then
+		return string.format("[%s]", value)
+	end
+
+	if t == "userdata" then
+		return string.format("[%s]", value)
+	end
+
+	return value
+end
+
+--------------------------------------------------------------------------------
+
 local Buffer = {}
 Buffer.__index = Buffer
 
@@ -46,15 +74,22 @@ function Buffer:CanHas(octet, bitBegin, bitCount)
 	end
 
 	if _debug then
-		assert(octet >= 1)
-		assert(octet == octet << 0)
+		assert(octet >= 1,
+			string.format("invalid argument: octet=%s", Quote(octet)))
+		assert(octet == octet << 0,
+			string.format("invalid argument: octet=%s", Quote(octet)))
 
-		assert(bitBegin >= 1)
-		assert(bitBegin <= 8)
-		assert(bitBegin == bitBegin << 0)
+		assert(bitBegin >= 1,
+			string.format("invalid argument: bitBegin=%s", Quote(bitBegin)))
+		assert(bitBegin <= 8,
+			string.format("invalid argument: bitBegin=%s", Quote(bitBegin)))
+		assert(bitBegin == bitBegin << 0,
+			string.format("invalid argument: bitBegin=%s", Quote(bitBegin)))
 
-		assert(bitCount >= 1)
-		assert(bitCount == bitCount << 0)
+		assert(bitCount >= 1,
+			string.format("invalid argument: bitCount=%s", Quote(bitCount)))
+		assert(bitCount == bitCount << 0,
+			string.format("invalid argument: bitCount=%s", Quote(bitCount)))
 	end
 
 	return (Buffer.Increment(octet, bitBegin, bitCount - 1) <= self._len)
@@ -67,15 +102,21 @@ function Buffer:Get(octet, bitBegin, bitCount)
 	end
 
 	if _debug then
-		assert(octet >= 1)
+		assert(octet >= 1,
+			string.format("invalid argument: octet=%s", Quote(octet)))
 
-		assert(bitBegin >= 1)
-		assert(bitBegin <= 8)
+		assert(bitBegin >= 1,
+			string.format("invalid argument: bitBegin=%s", Quote(bitBegin)))
+		assert(bitBegin <= 8,
+			string.format("invalid argument: bitBegin=%s", Quote(bitBegin)))
 
-		assert(bitCount >= 1)
-		assert(bitCount <= 32)
+		assert(bitCount >= 1,
+			string.format("invalid argument: bitCount=%s", Quote(bitCount)))
+		assert(bitCount <= 32,
+			string.format("invalid argument: bitCount=%s", Quote(bitCount)))
 
-		assert(Buffer.Increment(octet, bitBegin, bitCount - 1) <= self._len)
+		assert(Buffer.Increment(octet, bitBegin, bitCount - 1) <= self._len,
+			string.format("invalid argument: octet=%s, bitBegin=%s, bitCount=%s", Quote(octet), Quote(bitBegin), Quote(bitCount)))
 	end
 
 	local i = ((octet - 1) // 4) + 1
@@ -106,17 +147,24 @@ function Buffer:Set(octet, bitBegin, bitCount, value)
 	end
 
 	if _debug then
-		assert(octet >= 1)
+		assert(octet >= 1,
+			string.format("invalid argument: octet=%s", Quote(octet)))
 
-		assert(bitBegin >= 1)
-		assert(bitBegin <= 8)
+		assert(bitBegin >= 1,
+			string.format("invalid argument: bitBegin=%s", Quote(bitBegin)))
+		assert(bitBegin <= 8,
+			string.format("invalid argument: bitBegin=%s", Quote(bitBegin)))
 
-		assert(bitCount >= 1)
-		assert(bitCount <= 32)
+		assert(bitCount >= 1,
+			string.format("invalid argument: bitCount=%s", Quote(bitCount)))
+		assert(bitCount <= 32,
+			string.format("invalid argument: bitCount=%s", Quote(bitCount)))
 
-		assert(Buffer.Increment(octet, bitBegin, bitCount - 1) <= self._len)
+		assert(Buffer.Increment(octet, bitBegin, bitCount - 1) <= self._len,
+			string.format("invalid argument: octet=%s, bitBegin=%s, bitCount=%s", Quote(octet), Quote(bitBegin), Quote(bitCount)))
 
-		assert(value == value & ((1 << bitCount) - 1))
+		assert(value == value & ((1 << bitCount) - 1),
+			string.format("invalid argument: value=%s", Quote(value)))
 	end
 
 	local i = ((octet - 1) // 4) + 1
@@ -173,12 +221,16 @@ function Buffer:Reserve(octet, bitBegin, bitCount)
 	end
 
 	if _debug then
-		assert(octet >= 0)
+		assert(octet >= 0,
+			string.format("invalid argument: octet=%s", Quote(octet)))
 
-		assert(bitBegin >= 1)
-		assert(bitBegin <= 8)
+		assert(bitBegin >= 1,
+			string.format("invalid argument: bitBegin=%s", Quote(bitBegin)))
+		assert(bitBegin <= 8,
+			string.format("invalid argument: bitBegin=%s", Quote(bitBegin)))
 
-		assert(bitCount >= 0)
+		assert(bitCount >= 0,
+			string.format("invalid argument: bitCount=%s", Quote(bitCount)))
 	end
 
 	octet, bitCount = Buffer.Increment(octet, bitBegin, bitCount - 1)
