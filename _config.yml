@@ -1,0 +1,3 @@
+remote_theme: Descendent/jekyll.slate
+plugins:
+- jekyll-remote-theme
